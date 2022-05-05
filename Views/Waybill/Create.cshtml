@@ -1,0 +1,840 @@
+﻿@model Triton.Model.CRM.Custom.TritonWaybillSubmitModels
+@{
+    ViewData["Title"] = "Create E-Waybill";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Waybill</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Create E-Waybill</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Waybills</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <form asp-controller="Waybill" asp-action="Create" method="post" id="quoteForm">
+            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-left border-primary mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-primary icon-circle mr-3">
+                                    <i class="fal fa-user-alt text-primary"></i>
+                                </span>Account information
+                            </h4>
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <label asp-for="CustomerID" class="form-label">Customer</label>
+                                    <select asp-for="CustomerID" asp-items="@(new SelectList(Model.AllowedCustomerList, "CustomerID", "CustomerName"))" class="js-select2-custom custom-select" id="ddlCustomers"></select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="ServiceType" class="form-label">Service Type</label>
+                                    <select asp-for="ServiceType" asp-items="@(new SelectList(Model.TransportTypes, "TransportTypeID", "Description", "1"))" class="js-select2-custom custom-select"></select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CustXRef" class="form-label">My reference</label>
+                                    <input type="text" class="form-control" asp-for="CustXRef" placeholder="My reference" required data-msg="Please enter a reference">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Body -->
+                    </div>
+
+                    <div class="card card-border-left border-success mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-info icon-circle mr-3">
+                                    <i class="fal fa-warehouse text-success"></i>
+                                </span> Sender information
+                            </h4>
+                            <input asp-for="SenderCode" type="text" class="form-control form-control-pill form-control-light" id="txtSenderSite" style="width: 500px" placeholder="Search sender sites..." aria-label="Search sender sites...">
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="SenderName" class="form-label">Sender name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderName" class="form-control" placeholder="Sender name" type="text" required data-msg="Please enter a sender name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderContactName" class="form-label">Full name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderContactName" class="form-control" placeholder="Full name" type="text" required data-msg="Please enter full name" />
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderContactCell" class="form-label">Telephone number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderContactCell" class="form-control" placeholder="Telephone number" type="number" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderContactEmail" class="form-label">Email address</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderContactEmail" class="form-control" placeholder="Email address" type="email" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderAddress1" class="form-label">Address 1</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderAddress1" class="form-control" placeholder="Address 1" type="text" required data-msg="Please enter an address 1" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderAddress2" class="form-label">Address 2 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="SenderAddress2" class="form-control" placeholder="Address 2" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderAddress3" class="form-label">Address 3 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="SenderAddress3" class="form-control" placeholder="Address 3" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderSuburb" class="form-label">Suburb</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderSuburb" class="form-control" style="background: #F6F7FA" placeholder="Suburb" type="text" required data-msg="Please enter a suburb" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="SenderPostalCode" class="form-label">Postal code</label>
+                                    <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="The postal is reqiured"></i>
+                                    <div class="js-form-message">
+                                        <input asp-for="SenderPostalCode" class="form-control" style="background: #F6F7FA" placeholder="Postal code" type="text" required data-msg="Please enter a postal code" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Body -->
+                    </div>
+
+
+                    <div class="card card-border-left border-success mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-info icon-circle mr-3">
+                                    <i class="fal fa-map-marker-alt text-success"></i>
+                                </span>
+                                Receiver information
+                            </h4>
+                            <input asp-for="ReceiverCode" type="text" class="form-control form-control-pill form-control-light" style="width: 500px" id="txtReceiverSite" placeholder="Search receiver sites..." aria-label="Search receiver sites...">
+                            @*<i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="There is an additional charge associated with the below sundries"></i>*@
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverName" class="form-label">Receiver name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverName" class="form-control" placeholder="Receiver name" type="text" required data-msg="Please enter a receiver name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverContactName" class="form-label">Full name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverContactName" class="form-control" placeholder="Full name" type="text" required data-msg="Please enter full name" />
+                                    </div>
+                                </div>
+
+                                @*<div class="col-md-2">
+                                        <label for="inputEmail4" class="form-label">Email address</label>
+                                        <input asp-for="Quote.Email" class="form-control" placeholder="Email address" type="email" />
+                                    </div>*@
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverContactCell" class="form-label">Telephone number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverContactCell" class="form-control" placeholder="Telephone number" type="number" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverContactEmail" class="form-label">Email address</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverContactEmail" class="form-control" placeholder="Email address" type="email" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverAddress1" class="form-label">Address 1</label>
+                                    <input asp-for="ReceiverAddress1" class="form-control" placeholder="Address 1" type="text" required data-msg="Please enter an address 1" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverAddress2" class="form-label">Address 2 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="ReceiverAddress2" class="form-control" placeholder="Address 2" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverAddress3" class="form-label">Address 3 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="ReceiverAddress3" class="form-control" placeholder="Address 3" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverSuburb" class="form-label">Suburb</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverSuburb" class="form-control" style="background: #F6F7FA" placeholder="Suburb" type="text" required data-msg="Please enter a suburb" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="ReceiverPostalCode" class="form-label">Postal code</label>
+                                    <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="The postal is reqiured"></i>
+                                    <div class="js-form-message">
+                                        <input asp-for="ReceiverPostalCode" class="form-control" style="background: #F6F7FA" placeholder="Postal code" type="text" required data-msg="Please enter a postal code" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Body -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-border-left border-warning">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Body -->
+                        <div class="card-body">
+                            <h4>Dimensions <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="Please complete all the dimensions below"></i></h4>
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="inputEmail4" class="form-label">Description</label>
+                                    <select class="js-select2-custom custom-select" size="1" id="txtDescription" style="opacity: 0;"
+                                            data-hs-select2-options='{ "minimumResultsForSearch": "Infinity" }'>
+                                        <option value="Boxes">Boxes</option>
+                                        <option value="Envelop">Envelop</option>
+                                        <option value="Pallet">Pallet</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="txtQty" class="form-label">Quantity</label>
+                                    @*<input id="txtQty" class="form-control" placeholder="Quantity" type="text" value="1" />*@
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" value="1" id="txtQty" data-rule-digits="true">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="txtMass" class="form-label">Mass (kg)</label>
+                                    @*<input id="txtMass" class="form-control" placeholder="Mass (kg)" type="number" value="1" />*@
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" value="1" id="txtMass" data-rule-digits="true">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="txtLength" class="form-label">Length (cm)</label>
+                                    @*<input id="txtLength" class="form-control" placeholder="Length (cm)" type="number" value="1" />*@
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" value="1" id="txtLength" data-rule-digits="true">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="txtBreadth" class="form-label">Breath (cm)</label>
+                                    @*<input id="txtBreadth" class="form-control" placeholder="Breath (cm)" type="number" value="1" />*@
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" value="1" id="txtBreadth" data-rule-digits="true">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="txtHeight" class="form-label">Height (cm)</label>
+                                    @*<input id="txtHeight" class="form-control" placeholder="Height (cm)" type="number" value="1" />*@
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" value="1" id="txtHeight" data-rule-digits="true">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type="button" class="btn btn-outline-primary" id="addRow">Add New Line</button>
+                                </div>
+                            </p>
+
+                            <hr />
+                            <h4>Current Dimensions</h4>
+                            <div class="border-bottom pb-2 mb-2">
+                                <table id="dtTable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Line</th>
+                                            <th>Qty</th>
+                                            <th>Desc</th>
+                                            <th>Dims</th>
+                                            <th>Mass</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="bodyCal">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="media align-items-center mb-3">
+                                <h4 class="text-secondary font-size-1 font-weight-normal mb-0 mr-3">Total Parcels</h4>
+                                <div class="media-body text-right">
+                                    <span class="font-weight-semi-bold"><label id="lblTotalParcels"></label></span>
+                                </div>
+                            </div>
+                            <div class="alert alert-soft-danger noDimensions" role="alert">
+                                <label id="errDimension">No dimensions added</label>
+                            </div>
+                        </div>
+                        <!-- End Body -->
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-end align-items-center">
+                    <button type="submit" class="btn btn-primary" id="btnSave">
+                        <i class="fal fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+
+            <input asp-for="LinesJson" type="hidden" />
+        </form>
+    </div>
+</main>
+
+@section scripts{
+    <script src="~/js/bloodhound.min.js"></script>
+    <script src="~/js/handlebars.min-v4.7.7.js"></script>
+    <script src="~/js/typeahead.bundle.min.js"></script>
+    <script src="~/front-dashboard-v1.1/dist/assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
+
+    <script>
+        var counter = 1;
+        var parcels = 0;
+        var dataSet = [];
+        @if (Model.Lines != null)
+        {
+            @foreach (var line in Model.Lines)
+            {
+                @:dataSet.push({ LineNo: "@line.LineNo", LineQty: "@line.LineQty", Description: "@line.Description", LineLength: "@line.LineLength", LineBreadth: "@line.LineBreadth", LineHeight: "@line.LineHeight", LineMass: "@line.LineMass", VolMass: "" });
+            }
+        }
+        $('#LineItems').val(encodeURIComponent(JSON.stringify(dataSet)));
+
+        $('.NewSite').hide();
+        $('.SenNewSite').hide();
+        $('.SenNoSite').hide();
+        $('.NoSite').hide();
+        $('.SavedSite').show();
+        $('.SenSavedSite').show();
+
+        var t = $('#dtTable').DataTable(
+            {
+                columns: [
+                    { data: "LineNo" },
+                    { data: "Qty" },
+                    { data: "Description" },
+                    { data: "Dimensions" },
+                    { data: "Mass" },
+                    { data: "VolWeight" }
+                ],
+                "ordering": false,
+                "paging": false,
+                "searching": false,
+                "info": false,
+                "language": {
+                    "emptyTable": "Please add at least one line"
+                }
+            }
+        );
+
+        function removeRow(index) {
+            dataSet.splice(index - 1, 1);
+            parcels = 0;
+            dataSet.forEach(sortArray);
+            t.clear();
+            dataSet.forEach(addTableRows);
+            $('#lblTotalParcels').text(parcels);
+            t.draw();
+        };
+
+        function sortArray(item, index) {
+            item["LineNo"] = index + 1;
+        }
+
+        function addTableRows(item, index, arr) {
+            parcels = parcels + parseInt(item["LineQty"]);
+            t.rows.add(
+                $(' <tr><td class= "align-middle" >' + item["LineNo"] + '</td ><td class= "align-middle" >' + item["LineQty"] + '</td ><td class="align-middle">' + item["Description"] + '</td><td class="align-middle">' + item["LineLength"] + 'x' + item["LineBreadth"] + 'x' + item["LineHeight"] + '</td><td class="align-middle">' + item["LineMass"] + 'kg</td><td class="align-middle"><a class="d-block text-secondary font-size-1" href="javascript:;" onclick="removeRow(' + item["LineNo"] + ')"><span class="far fa-trash-alt mr-1"></span></a></td></tr >')
+            );
+        };
+
+        function showReceiverSite(option) {
+            switch (option) {
+            case "ExistingSite":
+                $('.SavedSite').show();
+                $('.NoSite').hide();
+                break;
+            case "NewSite":
+                $('.SavedSite').show();
+                $('.NoSite').hide();
+                break;
+            case "NoSite":
+                $('.SavedSite').hide();
+                $('.NoSite').show();
+                break;
+            }
+        };
+
+        function showSenderSite(option) {
+            switch (option) {
+            case "ExistingSite":
+                $('.SenSavedSite').show();
+                $('.SenNoSite').hide();
+                break;
+            case "NewSite":
+                $('.SenSavedSite').show();
+                $('.SenNoSite').hide();
+                break;
+            case "NoSite":
+                $('.SenSavedSite').hide();
+                $('.SenNoSite').show();
+                break;
+            }
+        };
+
+        function DoTypeAheads() {
+            $('#txtSenderPostalCode'),
+                pname = new Bloodhound({
+                    datumTokenizer: function(datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetPostalCodes?name=%QUERY",
+                        replace: function(url) {
+                            var ponumber = null;
+                            $(":focus").each(function() {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function(pname) {
+                            return pname;
+                        }
+                    }
+                });
+            $('#txtReceiverPostalCode'),
+                pname2 = new Bloodhound({
+                    datumTokenizer: function(datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetPostalCodes?name=%QUERY",
+                        replace: function(url) {
+                            var ponumber = null;
+                            $(":focus").each(function() {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function(pname) {
+                            return pname;
+                        }
+                    }
+                });
+            $('#txtSenderSite'),
+                sname = new Bloodhound({
+                    datumTokenizer: function(datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetSiteList?siteCode=%QUERY&customerCode=" + $("#ddlCustomers option:selected").text().split(" -")[0],
+                        replace: function(url) {
+                            var ponumber = null;
+                            $(":focus").each(function() {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function(sname) {
+                            return sname;
+                        }
+                    }
+                });
+            $('#txtReceiverSite'),
+                sname2 = new Bloodhound({
+                    datumTokenizer: function(datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetSiteList?siteCode=%QUERY&customerCode=" + $("#ddlCustomers option:selected").text().split(" -")[0],
+                        replace: function(url) {
+                            var ponumber = null;
+                            $(":focus").each(function() {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function(sname2) {
+                            return sname2;
+                        }
+                    }
+                });
+
+
+            // Initialize the Bloodhound suggestion engine
+            pname.initialize();
+            pname2.initialize();
+            sname.initialize();
+            sname2.initialize();
+
+            var typeaheadSettings = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{name}}'),
+                source: pname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any postal names that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{postalcode}}</label><label class="pull-right">{{name}}</label></div>'),
+                    footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+                }
+            };
+            var typeaheadSettings2 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{name}}'),
+                source: pname2.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any postal names that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{postalcode}}</label><label class="pull-right">{{name}}</label></div>'),
+                    footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+                }
+            };
+            var typeaheadSettings3 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{siteCode}}'),
+                source: sname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any sites that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{siteCode}}</label> - <label class="pull-right">{{siteName}}</label></div>'),
+                    footer: Handlebars.compile("<b> Searched for '{{query}}'</b>")
+
+                }
+            };
+
+            var typeaheadSettings4 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{siteCode}}'),
+                source: sname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any sites that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{siteCode}}</label> - <label class="pull-right">{{siteName}}</label></div>'),
+                    footer: Handlebars.compile("<b> Searched for '{{query}}'</b>")
+
+                }
+            };
+
+            // Instantiate the Typeahead UI
+            $('#txtSenderPostalCode').typeahead('destroy');
+            $('#txtReceiverPostalCode').typeahead('destroy');
+            $('#txtSenderSite').typeahead('destroy');
+            $('#txtReceiverSite').typeahead('destroy');
+
+            $('#txtSenderPostalCode').typeahead(null, typeaheadSettings).on("typeahead:selected",
+                function(obj, selectedItem) {
+                    $("#SenderPostalCode").val(selectedItem.postalCode);
+                    $("#SenderSuburb").val(selectedItem.name);
+                });
+            $('#txtReceiverPostalCode').typeahead(null, typeaheadSettings2).on("typeahead:selected",
+                function(obj, selectedItem) {
+                    $("#ReceiverPostalCode").val(selectedItem.postalCode);
+                    $("#ReceiverSuburb").val(selectedItem.name);
+                });
+
+            $('#txtSenderSite').typeahead(null, typeaheadSettings3).on("typeahead:selected",
+                function(obj, selectedItem) {
+                    $("#SenderAddress1").val(selectedItem.addressPhysical.streetAdd1);
+                    $("#SenderAddress2").val(selectedItem.addressPhysical.streetAdd2);
+                    $("#SenderAddress3").val(selectedItem.addressPhysical.streetAdd3);
+                    $("#SenderSuburb").val(selectedItem.addressPhysical.streetAdd4);
+                    $("#SenderPostalCode").val(selectedItem.addressPhysical.streetAdd5);
+                    $("#SenderName").val(selectedItem.siteName);
+                    $("#SenderContactName").val(selectedItem.contactPerson);
+                    $("#SenderContactCell").val(selectedItem.telephoneNo.replace(/ /g, ""));
+                    $("#SenderContactEmail").val(selectedItem.email);
+                });
+
+            $('#txtReceiverSite').typeahead(null, typeaheadSettings4).on("typeahead:selected",
+                function(obj, selectedItem) {
+                    $("#ReceiverAddress1").val(selectedItem.addressPhysical.streetAdd1);
+                    $("#ReceiverAddress2").val(selectedItem.addressPhysical.streetAdd2);
+                    $("#ReceiverAddress3").val(selectedItem.addressPhysical.streetAdd3);
+                    $("#ReceiverSuburb").val(selectedItem.addressPhysical.streetAdd4);
+                    $("#ReceiverPostalCode").val(selectedItem.addressPhysical.streetAdd5);
+                    $("#ReceiverName").val(selectedItem.siteName);
+                    $("#ReceiverContactName").val(selectedItem.contactPerson);
+                    $("#ReceiverContactCell").val(selectedItem.telephoneNo.replace(/ /g, ""));
+                    $("#ReceiverContactEmail").val(selectedItem.email);
+                });
+
+        };
+
+        $(document).ready(function() {
+
+            // INITIALIZATION OF QUANTITY COUNTER
+            // =======================================================
+            $('.js-quantity-counter').each(function() {
+                var quantityCounter = new HSQuantityCounter($(this)).init();
+            });
+
+            $('.noDimensions').hide();
+
+            $("#quoteForm").validate({
+                errorElement: "em",
+                errorPlacement: function(error, element) {
+                    // Add the `help-block` class to the error element
+                    error.addClass("invalid-feedback");
+
+                    // Add `has-feedback` class to the parent div.form-group
+                    // in order to add icons to inputs
+                    element.parents(".col-md-4").addClass("is-invalid");
+
+                    if (element.prop("type") === "checkbox") {
+                        error.insertAfter(element.parent("label"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+
+                    // Add the span element, if doesn't exists, and apply the icon classes to it.
+                    if (!element.next("span")[0]) {
+                        $("<span class='is-invalid'></span>").insertAfter(element);
+                    }
+                },
+                success: function(label, element) {
+                    // Add the span element, if doesn't exists, and apply the icon classes to it.
+                    if (!$(element).next("span")[0]) {
+                        $("<span class='form-control-feedback'></span>").insertAfter($(element));
+                    }
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).parents(".col-md-4").addClass("has-error").removeClass("has-success");
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).parents(".col-md-4").addClass("has-success").removeClass("has-error");
+                }
+            });
+
+
+            parcels = 0;
+            dataSet.forEach(addTableRows);
+            t.draw();
+            $('#lblTotalParcels').text(parcels);
+            $('#addRow').on('click', function() {
+                    $('.noDimensions').hide();
+
+                    if ($('#txtQty').val() < 1) {
+                        $('#errDimension').text('Quantity is required');
+                        $('.noDimensions').show();
+                    } else {
+                        var newLine = {
+                            "LineNo": dataSet.length + 1,
+                            "LineQty": $('#txtQty').val(),
+                            "Description": $('#txtDescription').val(),
+                            "LineLength": $('#txtLength').val(),
+                            "LineBreadth": $('#txtBreadth').val(),
+                            "LineHeight": $('#txtHeight').val(),
+                            "LineMass": $('#txtMass').val(),
+                            "VolWeight": "",
+                        };
+
+                        dataSet.push(newLine);
+
+                        $('#LinesJson').val(encodeURIComponent(JSON.stringify(dataSet)));
+
+                        t.clear();
+                        parcels = 0;
+                        dataSet.forEach(addTableRows);
+                        $('#lblTotalParcels').text(parcels);
+                        t.draw();
+                        $('#txtQty').val("");
+                        $('#txtDescription').val("");
+                        $('#txtLength').val("");
+                        $('#txtBreadth').val("");
+                        $('#txtHeight').val("");
+                        $('#txtMass').val("");
+
+                        $('#txtQty').focus();
+
+
+                        counter = dataSet.length + 1;
+                    }
+            });
+
+            $("form").on('submit', function (event) {
+                if (dataSet.length === 0) {
+                    //var validator = $( "#quoteForm" ).validate();
+                    //$('#txtTest').attr('required');
+                    $('#errDimension').text('No dimensions added');
+                    $('.noDimensions').show();
+
+                    // debugger;
+                    event.preventDefault();
+                    //console.log(event);
+                    return false;
+                }
+                //$('#txtTest').removeAttr('required');
+                //var validator = $("#quoteForm").validate();
+                //validator.resetForm();
+                //$("#quoteForm").validate();
+                //console.log(event);
+                return true;
+            });
+            DoTypeAheads();
+
+
+        });
+
+        function setDescription(parcelOption) {
+            $('#txtDescription').val(parcelOption);
+        }
+    </script>
+}
+

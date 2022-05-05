@@ -1,0 +1,66 @@
+﻿@using Microsoft.Extensions.Configuration
+@model Triton.Model.TritonOps.Custom.CustomerWaybills
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Triton Express";
+    ViewData["Header"] = "Waybill";
+    ViewData["HeaderBold"] = "Search";
+    ViewData["Description"] = "Search for a waybill";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+    <!-- Hero Section -->
+    <div id="SVGfiles" class="svg-preloader bg-light position-relative z-index-2">
+        <div class="container space-1">
+            <!-- Title -->
+            @*<div class="mb-7">
+                    <span class="d-block text-secondary">Search for a customer to link to</span>
+                    <h1 class="text-primary font-weight-semi-bold"></h1>
+                </div>*@
+            <!-- End Title -->
+            <!-- Search Jobs Form -->
+            
+            <form id="form" class=" row mb-1" method="post">
+                <div class="col-md-4">
+                    <!-- Input -->
+                    <label class="d-block">
+                        <span class="h6 d-block text-dark font-weight-semi-bold mb-0">Waybill Number</span>
+                    </label>
+                    <div class="js-focus-state">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Your waybill number" aria-label="waybillno" aria-describedby="keywordInputAddon" name="Waybillno" value="FLO80672675">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                </div>
+                <div class="col-md-4">
+                    <!-- Input -->
+                    <label class="d-block">
+                        <span class="h6 d-block text-dark font-weight-semi-bold mb-0">Customer Reference</span>
+                    </label>
+                    <div class="js-focus-state">
+                        <div class="input-group"><input type="text" class="form-control" placeholder="Your reference" aria-label="CustomerXRef" aria-describedby="keywordInputAddon" name="customerXRef">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                </div>
+             
+                <div class="col-lg-2 align-self-lg-end">
+                    <button type="submit" class="btn btn-block btn-primary transition-3d-hover">Search</button>
+                </div>
+                <!-- End Checkbox -->
+
+            </form>
+            <!-- End Search Jobs Form -->
+        </div>
+
+        <!-- SVG Icon -->
+        <div class="d-none d-lg-block w-100 position-absolute bottom-0 right-0 z-index-n1 max-width-27">
+            <figure class="ie-files">
+                <img class="js-svg-injector" src="@template/assets/svg/illustrations/files.svg" alt="Image Description"
+                     data-parent="#SVGfiles">
+            </figure>
+        </div>
+        <!-- End SVG Icon -->
+    </div>
+<!-- End Hero Section -->
+

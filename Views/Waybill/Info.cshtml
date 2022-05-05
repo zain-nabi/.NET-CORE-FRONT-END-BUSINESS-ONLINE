@@ -1,0 +1,685 @@
+﻿@model Triton.Model.CRM.Custom.WayBillInfoModel
+
+@using System.Globalization
+@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+@{
+    var textInfo = new CultureInfo("en-US", false).TextInfo;
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+
+    var statusColor = Model.Waybills.WaybillStatusID >= 17 ? "success" : "danger";
+
+    var iCount = 0;
+}
+
+@functions {
+
+    private void RenderDeliveryInformation(string address, string text, string icon)
+    {
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mr-2">
+                <span class="btn btn-icon btn-soft-primary rounded-circle">
+                    <span class="btn-icon__inner"><i class="@icon"></i></span>
+                </span>
+                <div class="ml-3">
+                    <h5 class="text-hover-primary mb-0">@(address ?? "N/A")</h5>
+                    <span class="font-size-sm text-body">@text</span>
+                </div>
+            </div>
+        </div>
+    }
+    private void RenderBlock(string label, string value, string icon, string color)
+    {
+        <div class="card card-frame transition-3d-hover mb-3">
+            <!-- Card -->
+            <div class="card-body">
+                <div class="media">
+                    <span class="btn btn-lg btn-icon btn-soft-@color rounded-circle mr-4">
+                        <span class="fas @icon btn-icon__inner"></span>
+                    </span>
+                    <div class="media-body px-4">
+                        <h4 class="h6 text-dark mb-1">@value</h4>
+                        <small class="d-block text-muted">@label</small>
+                    </div>
+                </div>
+            </div>
+            <!-- End Card -->
+        </div>
+    }
+
+    private void RenderDocuments(string label, string href, string id)
+    {
+        <li class="list-group-item py-3">
+            <div class="media">
+                <div class="mt-1 mr-3">
+                    <div class="media align-items-center">
+                        @*<div class="avatar avatar-sm avatar-soft-secondary avatar-circle mr-2">
+            <span class="avatar-initials">@label.Substring(0, 1)</span>
+        </div>*@
+                        <i class="fal fa-file-image nav-icon"></i>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">@label</h5>
+                            <span class="d-block font-size-sm">Waybill</span>
+                        </div>
+
+                        <div class="col-auto">
+                            <a class="btn btn-sm btn-white" href="@href" title="Launch importer" target="_blank">
+                                View <i class="tio-open-in-new ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+            </div>
+        </li>
+    }
+
+    private void RenderLabel(string label, string value, string icon)
+    {
+        <div class="d-flex align-items-start mb-4">
+            <span class="btn btn-icon btn-soft-danger rounded-circle">
+                <span class="btn-icon__inner"><i class="fad @icon"></i></span>
+            </span>
+
+            <div class="ml-3">
+                <span class="d-block text-dark">@label</span>
+                <small class="d-block text-secondary">@value</small>
+            </div>
+        </div>
+    }
+
+    private void DisableDocuments(string label)
+    {
+        <li class="list-group-item py-3">
+            <div class="media">
+                <div class="mt-1 mr-3">
+                    <div class="media align-items-center">
+                        @*<div class="avatar avatar-sm avatar-soft-secondary avatar-circle mr-2">
+            <span class="avatar-initials">@label.Substring(0, 1)</span>
+        </div>*@
+                        <i class="fal fa-cloud-upload nav-icon"></i>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">@label</h5>
+                            <span class="d-block font-size-sm">Waybill</span>
+                        </div>
+
+                        <div class="col-auto text-danger">
+                            <span class="badge badge-soft-danger p-1">
+                                <i class="fal fa-upload"></i> Awaiting upload
+                            </span>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+            </div>
+        </li>
+
+    }
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <div class="row justify-content-lg-center">
+            <div class="col-lg-10">
+                <!-- Profile Cover -->
+                <div class="profile-cover">
+                    <div class="profile-cover-img-wrapper">
+                        <img class="profile-cover-img" src="~/front-dashboard-v1.1/dist/assets/img/1920x400/img2.jpg" alt="Image Description">
+                    </div>
+                </div>
+                <!-- End Profile Cover -->
+                <!-- Profile Header -->
+                <div class="text-center mb-5">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-xxl avatar-circle avatar-border-lg profile-cover-avatar">
+                        <img class="avatar-img" src="~/front-dashboard-v1.1/dist/assets/img/160x160/waybill.jpg" alt="Image Description">
+                        <span class="avatar-status avatar-status-@statusColor"></span>
+                    </div>
+                    <!-- End Avatar -->
+
+                    <h1 class="page-header-title">@Model.Waybills.WaybillNo</h1>
+
+                    <!-- List -->
+                    <ul class="list-inline list-inline-m-1">
+                        <li class="list-inline-item">
+                            <i class="far fa-user-circle"></i>
+                            <span>@Model.Customers.AccountCode</span>
+                        </li>
+
+                        <li class="list-inline-item">
+                            <i class="far fa-industry-alt"></i>
+                            <span>@Model.Customers.Name</span>
+                        </li>
+
+                        <li class="list-inline-item">
+                            <i class="legend-indicator bg-@statusColor mr-1"></i>
+                            <span class="text-primary">@Model.WayBillStatuss.Description</span>
+                        </li>
+
+
+                    </ul>
+                    <!-- End List -->
+                </div>
+
+                @if (ViewData["Message"] != null)
+                {
+                    <div>
+                        @Html.Raw(ViewData["Message"])
+                    </div>
+                }
+
+                <div>
+                    <ul class="nav nav-tabs align-items-center" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="nav-one-eg1-tab" data-toggle="pill" href="#nav-one-eg1" role="tab" aria-controls="nav-one-eg1" aria-selected="true">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-two-eg1-tab" data-toggle="pill" href="#nav-two-eg1" role="tab" aria-controls="nav-two-eg1" aria-selected="false">Queries</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                            <div class="hs-unfold">
+                                <a class="js-hs-unfold-invoker btn btn-sm btn-soft-secondary" href="javascript:;" data-hs-unfold-options="{
+                           &quot;target&quot;: &quot;#contentActivityStreamDropdown&quot;,
+                           &quot;type&quot;: &quot;css-animation&quot;
+                         }" data-hs-unfold-target="#contentActivityStreamDropdown" data-hs-unfold-invoker="">
+                                    Actions <i class="fal fa-angle-down"></i>
+                                </a>
+
+                                <div id="contentActivityStreamDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right mt-1 hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-hidden" data-hs-target-height="211" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                    <span class="dropdown-header">Settings</span>
+
+                                    <a class="dropdown-item" href="javascript:;" data-toggle="modal" data-target="#inviteUserModal">
+                                        <i class="far fa-question-circle dropdown-item-icon"></i> Query
+                                    </a>
+                                    <a class="dropdown-item" href="@Url.Action("SaveQuery", "Waybill", new { waybillId = Model.Waybills.WaybillID, query = "Added to watch list", queryStatusLcid = 252 })">
+                                        <i class="far fa-clock dropdown-item-icon"></i> Add to watch list
+                                    </a>
+
+                                    <div class="dropdown-divider"></div>
+
+                                    <span class="dropdown-header">Delete</span>
+
+                                    <a class="dropdown-item" href="@Url.Action("DeleteWaybillQuery", "Waybill", new { waybillId = Model.Waybills.WaybillID })">
+                                        <i class="far fa-trash dropdown-item-icon"></i> Remove from watch list
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Unfold -->
+                            @*<div class="hs-unfold hs-nav-scroller-unfold">
+                                    <a class="js-hs-unfold-invoker btn btn-white" href="javascript:;" data-hs-unfold-options="{
+                                         &quot;target&quot;: &quot;#profileDropdown&quot;,
+                                         &quot;type&quot;: &quot;css-animation&quot;
+                                       }" data-hs-unfold-target="#profileDropdown" data-hs-unfold-invoker="">
+                                        Actions <i class="fal fa-angle-down"></i>
+                                    </a>
+
+                                    <div id="profileDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right mt-1 hs-unfold-hidden hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y" data-hs-target-height="243" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                        <span class="dropdown-header">Actions</span>
+
+                                        <a class="dropdown-item" href="javascript:;" data-toggle="modal" data-target="#inviteUserModal">
+                                            <i class="fal fa-question-circle dropdown-item-icon"></i> Query
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fal fa-clock dropdown-item-icon"></i> Add to watch list
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fal fa-trash dropdown-item-icon"></i> Remove from watch list
+                                        </a>
+                                    </div>
+                                </div>*@
+                            <!-- End Unfold -->
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- End Nav -->
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="nav-one-eg1" role="tabpanel" aria-labelledby="nav-one-eg1-tab">
+                        <div class="row">&nbsp;</div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <!-- Card -->
+                                <!--<div class="card card-body mb-3 mb-lg-5">
+                                <h5>Complete your profile</h5>-->
+                                <!-- Progress -->
+                                <!--<div class="d-flex justify-content-between align-items-center">
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-4">82%</span>
+                                </div>-->
+                                <!-- End Progress -->
+                                <!--</div>-->
+                                <!-- End Card -->
+                                <!-- Sticky Block Start Point -->
+                                <div id="accountSidebarNav"></div>
+
+                                <!-- Card -->
+                                <div class="js-sticky-block card mb-3 mb-lg-5" data-hs-sticky-block-options="{
+                       &quot;parentSelector&quot;: &quot;#accountSidebarNav&quot;,
+                       &quot;breakpoint&quot;: &quot;lg&quot;,
+                       &quot;startPoint&quot;: &quot;#accountSidebarNav&quot;,
+                       &quot;endPoint&quot;: &quot;#stickyBlockEndPoint&quot;,
+                       &quot;stickyOffsetTop&quot;: 20
+                     }">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Information</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body card-body-height">
+                                        <!-- Tab Content -->
+                                        <div class="tab-content" id="eventsTabContent">
+                                            <div class="tab-pane fade show active" id="this-week" role="tabpanel" aria-labelledby="this-week-tab">
+                                                <!-- Card -->
+                                                <div class="card card-border-left border-left-primary shadow-none rounded-0">
+                                                    <div class="card-body py-0">
+                                                        <div class="row">
+                                                            <div class="col-sm mb-2 mb-sm-0">
+                                                                @*<h2 class="font-weight-normal mb-1">12:00 - 03:00 <small class="font-size-sm text-body text-uppercase">pm</small></h2>*@
+                                                                <h5 class="text-hover-primary mb-0">Waybill Date</h5>
+                                                                <small class="text-body">@Model.Waybills.WaybillDate.Value.ToString("dd MMMM yyyy")</small>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Row -->
+                                                    </div>
+                                                </div>
+                                                <!-- End Card -->
+
+                                                <hr>
+
+                                                <!-- Card -->
+                                                <div class="card card-border-left border-left-info shadow-none rounded-0" href="#">
+                                                    <div class="card-body py-0">
+                                                        <div class="row">
+                                                            <div class="col-sm mb-2 mb-sm-0">
+                                                                @if (Model.Waybills.DelExpectedDateTimeStamp != null)
+                                                                {
+                                                                    <h2 class="font-weight-normal mb-1">@Model.Waybills.DelExpectedDateTimeStamp.Value.ToString("hh:mm") <small class="font-size-sm text-body text-uppercase">@Model.Waybills.DelExpectedDateTimeStamp.Value.ToString("tt")</small></h2>
+                                                                    <h5 class="text-hover-primary mb-0">Estimated delivery</h5>
+                                                                    <small class="text-body">@Model.Waybills.DelExpectedDateTimeStamp.Value.ToString("dd MMMM yyyy")</small>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <h2 class="font-weight-normal mb-1">N/A</h2>
+                                                                    <h5 class="text-hover-primary mb-0">Estimated delivery</h5>
+                                                                    <small class="text-body">N/A</small>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Row -->
+                                                    </div>
+                                                </div>
+                                                <!-- End Card -->
+
+                                                <hr>
+
+                                                <!-- Card -->
+                                                <div class="card card-border-left border-left-success shadow-none rounded-0" href="#">
+                                                    <div class="card-body py-0">
+                                                        <div class="row">
+                                                            <div class="col-sm mb-2 mb-sm-0">
+                                                                <h2 class="font-weight-normal mb-1">@(Model.Waybills.PODDateTimeStamp == null ? "In progress" : Model.Waybills.PODDateTimeStamp.Value.ToString("hh:mm tt")) <small class="font-size-sm text-body text-uppercase">@(Model.Waybills.PODDateTimeStamp == null ? "" : Model.Waybills.PODDateTimeStamp.Value.ToString("tt"))</small></h2>
+                                                                <h5 class="text-hover-primary mb-0">Proof of delivery</h5>
+                                                                <small class="text-body">@(Model.Waybills.PODDateTimeStamp == null ? "" : Model.Waybills.PODDateTimeStamp.Value.ToString("dd MMMM yyyy"))</small>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Row -->
+                                                    </div>
+                                                </div>
+                                                <!-- End Card -->
+                                                <hr>
+                                            </div>
+                                        </div>
+                                        <!-- End Tab Content -->
+                                    </div>                            <!-- End Body -->
+                                </div>
+                                <!-- End Card -->
+
+                                <div class="card">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Documentation</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush list-group-no-gutters">
+                                            @if (Model.Waybills.PODDateTimeStamp != null)
+                                            {
+                                                RenderDocuments("POD", Url.Action("PrintWaybillPOD", "Waybill", new { Model.Waybills.WaybillNo }), "lnkPODImage");
+                                                @*RenderDocuments("Signature", Url.Action("PrintSignature", "Waybill", new { Model.Waybills.WaybillNo }), "lnkSignatureImage");*@
+                                            }
+                                            else
+                                            {
+                                                DisableDocuments("No POD");
+                                                DisableDocuments("No Signature");
+                                            }
+
+                                            @{
+                                                RenderDocuments("Stickers", Url.Action("PrintWaybillSticker", "Waybill", new { Model.Waybills.WaybillNo }), "lnkStickers");
+                                            }
+                                            @{
+                                                RenderDocuments("E-Waybill", Url.Action("PrintEWaybill", "Waybill", new { Model.Waybills.WaybillNo }), "lnkEWaybill");
+                                            }
+                                            @{
+                                                RenderDocuments("POD Stickers", Url.Action("PrintWaybillPODSticker", "Waybill", new { Model.Waybills.WaybillNo }), "lnkPODStickers");
+                                            }
+                                        </ul>
+                                    </div>
+                                    <!-- End Body -->
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <!-- Card -->
+                                <div class="card mb-3 mb-lg-5">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Tracking</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body card-body-height">
+                                        <!-- Step -->
+                                        <ul class="step step-icon-xs">
+                                            @if (Model.WaybillTrackandTracesModel.Count == 0)
+                                            {
+                                                <li class="step-item">
+                                                    <div class="step-content-wrapper">
+                                                        <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                        <div class="step-content">
+                                                            <h5 class="mb-1">
+                                                                <span class="text-dark">No tracking information</span>
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                foreach (var item in Model.WaybillTrackandTracesModel)
+                                                {
+                                                    if (iCount < 6)
+                                                    {
+                                                        <!-- Step Item -->
+                                                        <li class="step-item">
+                                                            <div class="step-content-wrapper">
+                                                                <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                                <div class="step-content">
+                                                                    <h5 class="mb-1">
+                                                                        <span class="text-dark">@textInfo.ToTitleCase(item.CustomerDesc.ToLower())</span>
+                                                                    </h5>
+
+                                                                    <p class="font-size-sm mb-1"><span class="text-uppercase text-primary"><i class="tio-poi"></i> </span>@textInfo.ToTitleCase(item.FWEventLocation)</p>
+
+                                                                    <small class="text-muted text-uppercase">@item.EventDateTimeStamp.Value.ToString("dd MMMM yyyy") @item.EventDateTimeStamp.Value.ToString("hh:mm:tt")</small>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <!-- End Step Item -->
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <!-- Step Item -->
+                                                        <li id="collapseActivitySection" class="step-item collapse">
+                                                            <div class="step-content-wrapper">
+                                                                <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                                <div class="step-content">
+                                                                    <h5 class="mb-1">
+                                                                        <span class="text-dark" href="#">@textInfo.ToTitleCase(item.CustomerDesc)</span>
+                                                                    </h5>
+
+                                                                    <p class="font-size-sm mb-1">@textInfo.ToTitleCase(item.FWEventLocation) <span class="text-uppercase text-primary"><i class="tio-folder-bookmarked"></i> @item.NoteDetail</span></p>
+
+                                                                    <small class="text-muted text-uppercase">@item.EventDateTimeStamp.Value.ToString("dd MMMM yyyy") @item.EventDateTimeStamp.Value.ToString("hh:mm:tt")</small>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <!-- End Step Item -->
+                                                    }
+
+
+
+                                                    iCount++;
+                                                }
+                                            }
+                                        </ul>
+                                        <!-- End Step -->
+                                    </div>
+                                    <!-- End Body -->
+                                    <!-- Footer -->
+                                    <!--<div class="card-footer">
+                                        <a class="btn btn-sm btn-ghost-secondary" data-toggle="collapse" href="#collapseActivitySection" role="button" aria-expanded="false" aria-controls="collapseActivitySection">
+                                            <span class="btn-toggle-default">
+                                                <i class="tio-chevron-down mr-1"></i> View more
+                                            </span>
+                                            <span class="btn-toggle-toggled">
+                                                <i class="tio-chevron-up mr-1"></i> View less
+                                            </span>
+                                        </a>
+                                    </div>-->
+                                    <!-- End Footer -->
+                                </div>
+                                <!-- End Card -->
+
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3 mb-lg-5">
+                                        <!-- Card -->
+                                        <div class="card h-100">
+                                            <!-- Header -->
+                                            <div class="card-header">
+                                                <h5 class="card-header-title">Sender Information</h5>
+                                            </div>
+                                            <!-- End Header -->
+                                            <!-- Body -->
+                                            <div class="card-body">
+                                                <ul class="list-unstyled list-unstyled-py-4 mb-0">
+                                                    <!-- List Item -->
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.SiteCustomerName, "Name", "fal fa-warehouse");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.Address1, "Address 1", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.Address2, "Address 2", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.Address3, "Address 3", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.Address4, "Address 4", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.SenderSites.PostalCode, "Postal Code", "fal fa-map-marker-alt");}</li>
+                                                </ul>
+                                            </div>
+                                            <!-- End Body -->
+                                            <!-- Footer -->
+                                            @*<a class="card-footer text-center" href="user-profile-connections.html">
+                                                    View all connections <i class="tio-chevron-right"></i>
+                                                </a>*@
+                                            <!-- End Footer -->
+                                        </div>
+                                        <!-- End Card -->
+                                    </div>
+
+                                    <div class="col-sm-6 mb-3 mb-lg-5">
+                                        <!-- Card -->
+                                        <div class="card h-100">
+                                            <!-- Header -->
+                                            <div class="card-header">
+                                                <h5 class="card-header-title">Receiver Information</h5>
+                                            </div>
+                                            <!-- End Header -->
+                                            <!-- Body -->
+                                            <div class="card-body">
+                                                <ul class="list-unstyled list-unstyled-py-4 mb-0">
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.SiteCustomerName, "Name", "fal fa-warehouse-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.Address1, "Address 1", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.Address2, "Address 2", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.Address3, "Address 3", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.Address4, "Address 4", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.ReceiverSites.PostalCode, "Postal Code", "fal fa-map-marker-alt");}</li>
+                                                </ul>
+                                            </div>
+                                            <!-- End Body -->
+                                            <!-- Footer -->
+                                            @*<a class="card-footer text-center" href="user-profile-teams.html">
+                                                    View all teams <i class="tio-chevron-right"></i>
+                                                </a>*@
+                                            <!-- End Footer -->
+                                        </div>
+                                        <!-- End Card -->
+                                    </div>
+                                </div>
+                                <!-- End Row -->
+                            </div>
+                        </div>
+                        <!-- End Row -->
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-two-eg1" role="tabpanel" aria-labelledby="nav-two-eg1-tab">
+                        <!-- Card -->
+                        <div class="card mb-3 mb-lg-5">
+                            <!-- Header -->
+                            <div class="card-header">
+                                <h5 class="card-header-title">Queries</h5>
+                            </div>
+                            <!-- End Header -->
+                            <!-- Body -->
+                            <div class="card-body card-body-height">
+                                @if (Model.WaybillQuery.Count == 0)
+                                {
+                                    <div class="row align-items-sm-center">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <p class="lead">No queries found</p>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- Step -->
+                                    <ul class="step step-icon-xs">
+                                        @foreach (var item in Model.WaybillQuery)
+                                        {
+                                            <!-- Step Item -->
+                                            <li class="step-item">
+                                                <div class="step-content-wrapper">
+                                                    <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                    <div class="step-content">
+                                                        <h5 class="mb-1">
+                                                            <span class="text-dark">@textInfo.ToTitleCase(item.Query.ToLower())</span>
+                                                        </h5>
+
+                                                        <p class="font-size-sm mb-1">
+                                                            <span class="text-uppercase text-primary"><i class="fal fa-comments-alt"></i> </span>
+                                                            @if (item.Resolution == null && item.QueryStatusLCID == 251)
+                                                            {
+                                                                <span>@($"We will get back to you as soon as possible.  Your reference number is:  {item.WaybillQueryID}")</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span> @(item.Resolution == null ? "Tracking" : item.Resolution)</span>
+                                                            }
+                                                        </p>
+                                                        <small class="text-muted text-uppercase">@item.CreatedOn.ToString("dd MMMM yyyy") @item.CreatedOn.ToString("hh:mm tt")</small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <!-- End Step Item -->
+                                        }
+                                    </ul>
+                                }
+                                <!-- End Step -->
+                            </div>
+                            <!-- End Body -->
+                        </div>
+                        <!-- End Card -->
+                    </div>
+
+                    @*<div class="tab-pane fade" id="nav-three-eg1" role="tabpanel" aria-labelledby="nav-three-eg1-tab">
+                            <p>Third tab content...</p>
+                        </div>*@
+                </div>
+                <!-- End Tab Content -->
+
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+
+<!-- Modal -->
+<div id="inviteUserModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalTopCoverTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-top-cover bg-dark text-center">
+                <figure class="position-absolute right-0 bottom-0 left-0" style="margin-bottom: -1px;">
+                    <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1920 100.1">
+                        <path fill="#fff" d="M0,0c0,0,934.4,93.4,1920,0v100.1H0L0,0z"></path>
+                    </svg>
+                </figure>
+
+                <div class="modal-close">
+                    <button type="button" class="btn btn-icon btn-sm btn-ghost-light" data-dismiss="modal" aria-label="Close">
+                        <svg width="16" height="16" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="modal-top-cover-icon">
+                <span class="icon icon-lg icon-light icon-circle icon-centered shadow-soft">
+                    <i class="tio-receipt-outlined"></i>
+                </span>
+            </div>
+
+            <form class="js-validate" method="post" asp-controller="Waybill" asp-action="SaveQuery">
+                <div class="modal-body">
+                    <div class="form-group js-form-message">
+                        <label class="input-label" for="exampleFormControlTextarea1">How can we help you?</label>
+                        <textarea id="query" name="query" class="form-control" data-msg="Please enter your query." placeholder="Enter your query..." aria-label="Enter your query..." required rows="4"></textarea>
+                    </div>
+
+                    <input type="hidden" id="waybillId" name="waybillId" value="@Model.Waybills.WaybillID" />
+                    <input type="hidden" id="queryStatusLcid" name="queryStatusLcid" value="251" />
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+@section scripts{
+    <script>
+        $(document).on('ready', function () {
+            // INITIALIZATION OF FORM VALIDATION
+            // =======================================================
+            $('.js-validate').each(function () {
+                $.HSCore.components.HSValidation.init($(this));
+            });
+        });
+    </script>
+}

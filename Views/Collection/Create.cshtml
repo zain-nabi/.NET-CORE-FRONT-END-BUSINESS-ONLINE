@@ -1,0 +1,781 @@
+﻿@model Triton.Model.CRM.Custom.CollectionRequestsModel
+@{
+    ViewData["Title"] = "Request a Collection";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Collections</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Request a Collection</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Collections</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+
+        <form asp-controller="Collection" asp-action="Create" method="post" class="js-validate" id="quoteForm">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-left border-primary mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-primary icon-circle mr-3">
+                                    <i class="fal fa-user-alt text-primary"></i>
+                                </span>Account information
+                            </h4>
+                        </div>
+                        <!-- End Header -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CustomerID" class="form-label">Customer</label>
+                                    <select asp-for="CollectionRequests.CustomerID" asp-items="@(new SelectList(Model.AllowedCustomerList, "CustomerID", "CustomerName"))" class="js-select2-custom custom-select" id="ddlCustomers"></select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.ServiceTypeID" class="form-label">Service Type</label>
+                                    <select asp-for="CollectionRequests.ServiceTypeID" asp-items="@(new SelectList(Model.TransportTypes, "TransportTypeID", "Description", "1"))" class="js-select2-custom custom-select"></select>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CallerName" class="form-label">First name</label>
+                                    <input type="text" class="form-control" asp-for="CollectionRequests.CallerName" placeholder="Contact first name" required data-msg="Please enter a first name">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CallerSurname" class="form-label">Surname</label>
+                                    <input asp-for="CollectionRequests.CallerSurname" class="form-control" placeholder="Contact surname" type="text" required data-msg="Please enter a surname"/>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CallerContactInfo" class="form-label">Telephone number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.CallerContactInfo" class="form-control" placeholder="Telephone number" maxlength="10" type="number" required data-msg="Please enter a telephone number"  />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CallerRelationship" class="form-label">Relationship</label>
+                                    <div class="js-form-message">
+                                        <select asp-for="CollectionRequests.CallerRelationship" class="js-select2-custom custom-select">
+                                            <option selected="" value="S">
+                                                Sender
+                                            </option>
+                                            <option value="R">
+                                                Receiver
+                                            </option>
+                                            <option value="O">
+                                                Other
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.DateCollReq" class="form-label">Collection date</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.DateCollReq" class="flatpickr-custom-form-control js-flatpickr  form-control" placeholder="Collection date" type="date" required data-msg="Please enter a collection date" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.TimeCollAfter" class="form-label">Collect after</label>
+                                    <div class="js-form-message">
+                                        <input id="tpCollectAfter" asp-for="CollectionRequests.TimeCollAfter" class=" form-control" placeholder="Collect after" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.TimeCollBefore" class="form-label">Collect before</label>
+                                    <div class="js-form-message">
+                                        <input id="tpCollectBefore" asp-for="CollectionRequests.TimeCollBefore" class=" form-control" placeholder="Collect before" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CustomerXref" class="form-label">Order number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.CustomerXref" class=" form-control" placeholder="Your custom reference" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label asp-for="CollectionRequests.CollFromSecurity" class="form-label">Collect from security</label>
+                                    <div class="js-form-message">
+                                        <div class="custom-control custom-checkbox-switch mr-2">
+                                            <input type="checkbox" id="connectionsCheckbox7" asp-for="CollectionRequests.CollFromSecurity" class="custom-control-input custom-checkbox-switch-input">
+                                            <label class="custom-checkbox-switch-label btn" for="connectionsCheckbox7">
+                                                <span class="custom-checkbox-switch-default">
+                                                    <i class="fal fa-times-circle mr-1"></i> No
+                                                </span>
+                                                <span class="custom-checkbox-switch-active">
+                                                    <i class="fal fa-check-circle mr-1"></i> Yes
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @*<div class="js-form-message">
+                                            <input type="checkbox" asp-for="CollectionRequests.CollFromSecurity" class="custom-control-input" id="customSwitch4" checked>
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="card card-border-left border-success mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-info icon-circle mr-3">
+                                    <i class="fal fa-warehouse text-success"></i>
+                                </span> Sender information
+                            </h4>
+                            <input type="text" class="form-control form-control-pill form-control-light" id="txtSenderSite" style="width: 500px" placeholder="Search sender sites..." aria-label="Search sender sites...">
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendName" class="form-label">Sender name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendName" class="form-control" placeholder="Sender name" type="text" required data-msg="Please enter a sender name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendContact" class="form-label">Full name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendContact" class="form-control" placeholder="Full name" type="text" required data-msg="Please enter full name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendTelNo" class="form-label">Telephone number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendTelNo" class="form-control" placeholder="Telephone number" type="number" minlength="10" maxlength="10" required data-msg="Please enter a telephone number" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendAdd1" class="form-label">Address 1</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendAdd1" class="form-control" placeholder="Address 1" type="text" required data-msg="Please enter an address 1" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendAdd2" class="form-label">Address 2 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="CollectionRequests.SendAdd2" class="form-control" placeholder="Address 2" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendAdd3" class="form-label">Address 3 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="CollectionRequests.SendAdd3" class="form-control" placeholder="Address 3" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendAdd4" class="form-label">Suburb</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendAdd4" class="form-control" style="background: #F6F7FA" placeholder="Suburb" type="text" required data-msg="Please enter a suburb" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendAddPostalCode" class="form-label">Postal code</label>
+                                    <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="The postal is reqiured"></i>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendAddPostalCode" class="form-control" style="background: #F6F7FA" placeholder="Postal code" type="text" required data-msg="Please enter a postal code" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.SendInstructions1" class="form-label">Instructions</label>
+                                    <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="Enter any instructions"></i>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.SendInstructions1" class="form-control" placeholder="Enter any instructions" type="text" required data-msg="Please enter an instruction" value="None" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Body -->
+                    </div>
+
+                    <div class="card card-border-left border-success mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-info icon-circle mr-3">
+                                    <i class="fal fa-map-marker-alt text-success"></i>
+                                </span>
+                                Receiver information
+                            </h4>
+                            <input type="text" class="form-control form-control-pill form-control-light" style="width: 500px" id="txtReceiverSite" placeholder="Search receiver sites..." aria-label="Search receiver sites...">
+                            @*<i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="There is an additional charge associated with the below sundries"></i>*@
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecName" class="form-label">Receiver name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.RecName" class="form-control" placeholder="Receiver name" type="text" required data-msg="Please enter a receiver name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecContact" class="form-label">Full name</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.RecContact" class="form-control" placeholder="Full name" type="text" required data-msg="Please enter full name" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecTelNo" class="form-label">Telephone number</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.RecTelNo" class="form-control" placeholder="Telephone number" type="number" minlength="10" maxlength="10" required data-msg="Please enter a telephone number" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecAdd1" class="form-label">Address 1</label>
+                                    <input asp-for="CollectionRequests.RecAdd1" class="form-control" placeholder="Address 1" type="text" required data-msg="Please enter an address 1" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecAdd2" class="form-label">Address 2 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="CollectionRequests.RecAdd2" class="form-control" placeholder="Address 2" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecAdd3" class="form-label">Address 3 <span class="input-label-secondary">(Optional)</span></label>
+                                    <input asp-for="CollectionRequests.RecAdd3" class="form-control" placeholder="Address 3" type="text" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecAdd4" class="form-label">Suburb</label>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.RecAdd4" class="form-control" style="background: #F6F7FA" placeholder="Suburb" type="text" required data-msg="Please enter a suburb" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.RecAddPostalCode" class="form-label">Postal code</label>
+                                    <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="The postal is reqiured"></i>
+                                    <div class="js-form-message">
+                                        <input asp-for="CollectionRequests.RecAddPostalCode" class="form-control" style="background: #F6F7FA" placeholder="Postal code" type="text" required data-msg="Please enter a postal code" />
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                        <label asp-for="CollectionRequests.RecInstructions1" class="form-label">Instructions</label>
+                                        <i class="tio-help-outlined text-body ml-1" data-toggle="tooltip" data-placement="top" title="" data-original-title="Enter any instructions"></i>
+                                        <div class="js-form-message">
+                                            <input asp-for="CollectionRequests.RecInstructions1" class="form-control" placeholder="Enter any instructions" type="text" required data-msg="Please enter an instruction" value="None" />
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <!-- Body -->
+                    </div>
+
+                    <div class="card card-border-left border-warning mb-3 mb-lg-5">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h4 class="card-header-title">
+                                <span class="icon icon-soft-info icon-circle mr-3">
+                                    <i class="fal fa-map-marker-alt text-success"></i>
+                                </span>
+                                Estimations
+                            </h4>
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.EstQty" class="form-label">Total parcels</label>
+
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" asp-for="CollectionRequests.EstQty" value="1" min="1" data-rule-digits="true" data-msg="Please enter the total number of parcels">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.EstMass" class="form-label">Estimated Mass</label>
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" asp-for="CollectionRequests.EstMass" value="1" min="1" data-rule-digits="true" data-msg="Please enter the estimated mass">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.EstVolume" class="form-label">Estimated Volume</label>
+                                    <div class="js-quantity-counter input-group-quantity-counter w-100">
+                                        <input type="number" class="js-result form-control input-group-quantity-counter-control" asp-for="CollectionRequests.EstVolume" value="1" min="1" data-rule-digits="true" data-msg="Please enter the estimated volume">
+
+                                        <div class="input-group-quantity-counter-toggle">
+                                            <a class="js-minus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-remove"></i>
+                                            </a>
+                                            <a class="js-plus input-group-quantity-counter-btn" href="javascript:;">
+                                                <i class="tio-add"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label asp-for="CollectionRequests.EstVolume" class="form-label">Special instructions</label>
+                                    <div class="js-form-message">
+                                        <textarea class="form-control" asp-for="CollectionRequests.SpecialInstructions" placeholder="If there's anthing we should now about the shipment" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Body -->
+
+                        <div class="card-footer d-flex justify-content-end align-items-center">
+                            <button type="submit" class="btn btn-primary" id="btnSave">
+                                <i class="fal fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @if (ViewData["Message"] != null)
+                    {
+                        <div class="alert alert-soft-danger" role="alert">
+                            @Html.Raw(ViewData["Message"])
+                        </div>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+@section scripts{
+    <script src="~/front-dashboard-v1.1/dist/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="~/js/bloodhound.min.js"></script>
+    <script src="~/js/handlebars.min-v4.7.7.js"></script>
+    <script src="~/js/typeahead.bundle.min.js"></script>
+    <script src="~/front-dashboard-v1.1/dist/assets/vendor/hs-quantity-counter/dist/hs-quantity-counter.min.js"></script>
+
+    <script>
+        var counter = 1;
+        var parcels=0;
+        var dataSet = [];
+
+        $('.NewSite').hide();
+        $('.SenNewSite').hide();
+        $('.SenNoSite').hide();
+        $('.NoSite').hide();
+        $('.SavedSite').show();
+        $('.SenSavedSite').show();
+
+        var t = $('#dtTable').DataTable(
+            {
+                columns: [
+                    { data: "LineNo" },
+                    { data: "Qty" },
+                    { data: "Description" },
+                    { data: "Dimensions" },
+                    { data: "Mass" },
+                    { data: "VolWeight" }
+                ], "ordering": false
+                , "paging": false
+                , "searching": false
+                , "info": false
+                , "language": {
+                    "emptyTable": "Please add at least one line"
+                }
+            }
+        );
+
+        function removeRow(index) {
+            dataSet.splice(index - 1, 1);
+            parcels = 0;
+            dataSet.forEach(sortArray);
+            t.clear();
+            dataSet.forEach(addTableRows);
+            $('#lblTotalParcels').text(parcels);
+            t.draw();
+        };
+
+        function sortArray(item, index) {
+            item["LineNo"] = index + 1;
+        }
+
+        function addTableRows(item, index, arr) {
+            parcels = parcels + parseInt(item["Qty"]);
+            t.rows.add(
+                $(' <tr><td class= "align-middle" >' + item["LineNo"] + '</td ><td class= "align-middle" >' + item["Qty"] + '</td ><td class="align-middle">' + item["Description"] + '</td><td class="align-middle">' + item["Length"] + 'x' + item["Breadth"] + 'x' + item["Height"] + '</td><td class="align-middle">' + item["Mass"] + 'kg</td><td class="align-middle"><a class="d-block text-secondary font-size-1" href="javascript:;" onclick="removeRow(' + item["LineNo"] + ')"><span class="far fa-trash-alt mr-1"></span></a></td></tr >')
+            );
+        };
+        function showReceiverSite(option) {
+            switch (option) {
+                case "ExistingSite":
+                    $('.SavedSite').show();
+                    $('.NoSite').hide();
+                    break;
+                case "NewSite":
+                    $('.SavedSite').show();
+                    $('.NoSite').hide();
+                    break;
+                case "NoSite":
+                    $('.SavedSite').hide();
+                    $('.NoSite').show();
+                    break;
+            }
+        };
+
+        function showSenderSite(option) {
+            switch (option) {
+                case "ExistingSite":
+                    $('.SenSavedSite').show();
+                    $('.SenNoSite').hide();
+                    break;
+                case "NewSite":
+                    $('.SenSavedSite').show();
+                    $('.SenNoSite').hide();
+                    break;
+                case "NoSite":
+                    $('.SenSavedSite').hide();
+                    $('.SenNoSite').show();
+                    break;
+            }
+        };
+
+        $('#tpCollectBefore').daterangepicker({
+            timePicker : true,
+            singleDatePicker:true,
+            //timePicker24Hour : true,
+            timePickerIncrement : 30,
+            timePickerSeconds: false,
+            locale : {
+                format : 'HH:mm'
+            }
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+
+        $('#tpCollectAfter').daterangepicker({
+            timePicker : true,
+            singleDatePicker:true,
+            //timePicker24Hour : true,
+            timePickerIncrement : 30,
+            timePickerSeconds: false,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale : {
+                format: 'HH:mm'
+            }
+        }).on('show.daterangepicker', function(ev, picker) {
+            picker.container.find(".calendar-table").hide();
+        });
+        //$("#tpCollectBefore").timepicker({
+        //    uiLibrary:'bootstrap4',
+        //    format:'HH.MM'
+        //    });
+        //$("#tpCollectAfter").timepicker({
+        //    uiLibrary: 'bootstrap4',
+        //    format: 'HH.MM'
+        //});
+
+        $(document).ready(function () {
+            // INITIALIZATION OF QUANTITY COUNTER
+            // =======================================================
+            $('.js-quantity-counter').each(function () {
+                var quantityCounter = new HSQuantityCounter($(this)).init();
+            });
+
+            // INITIALIZATION OF FORM VALIDATION
+            // =======================================================
+            $('.js-validate').each(function() {
+                $.HSCore.components.HSValidation.init($(this));
+            });
+
+            $('.js-flatpickr').flatpickr({
+                minDate: moment(new Date()).format("YYYY-MM-DD")
+        });
+
+
+            DoTypeAheads();
+
+        });
+
+        function setDescription(parcelOption) {
+            $('#txtDescription').val(parcelOption);
+        }
+
+        function DoTypeAheads() {
+            $('#txtSenderPostalCode'),
+                pname = new Bloodhound({
+                    datumTokenizer: function (datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetPostalCodes?name=%QUERY",
+                        replace: function (url) {
+                            var ponumber = null;
+                            $(":focus").each(function () {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function (pname) {
+                            return pname;
+                        }
+                    }
+                });
+            $('#txtReceiverPostalCode'),
+                pname2 = new Bloodhound({
+                    datumTokenizer: function (datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetPostalCodes?name=%QUERY",
+                        replace: function (url) {
+                            var ponumber = null;
+                            $(":focus").each(function () {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function (pname) {
+                            return pname;
+                        }
+                    }
+                });
+            $('#txtSenderSite'),
+                sname = new Bloodhound({
+                    datumTokenizer: function (datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetSiteListUAT?siteCode=%QUERY&customerCode=" + $("#ddlCustomers option:selected").text().split(" -")[0],
+                        replace: function (url) {
+                            var ponumber = null;
+                            $(":focus").each(function () {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function (sname) {
+                            return sname;
+                        }
+                    }
+                });
+            $('#txtReceiverSite'),
+                sname2 = new Bloodhound({
+                    datumTokenizer: function (datum) {
+                        return Bloodhound.tokenizers.whitespace(datum.title);
+                    },
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: "/Ajax/GetSiteListUAT?siteCode=%QUERY&customerCode=" + $("#ddlCustomers option:selected").text().split(" -")[0],
+                        replace: function (url) {
+                            var ponumber = null;
+                            $(":focus").each(function () {
+                                ponumber = "#" + this.id;
+                            });
+                            return url.replace('%QUERY', $(ponumber).val());
+                        },
+                        filter: function (sname2) {
+                            return sname2;
+                        }
+                    }
+                });
+
+
+            // Initialize the Bloodhound suggestion engine
+            pname.initialize();
+            pname2.initialize();
+            sname.initialize();
+            sname2.initialize();
+
+            var typeaheadSettings = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{name}}'),
+                source: pname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any postal names that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{postalcode}}</label><label class="pull-right">{{name}}</label></div>'),
+                    footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+                }
+            };
+            var typeaheadSettings2 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{name}}'),
+                source: pname2.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any postal names that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{postalcode}}</label><label class="pull-right">{{name}}</label></div>'),
+                    footer: Handlebars.compile("<b>Searched for '{{query}}'</b>")
+                }
+            };
+            var typeaheadSettings3 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{siteCode}}'),
+                source: sname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any sites that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{siteCode}}</label> - <label class="pull-right">{{siteName}}</label></div>'),
+                    footer: Handlebars.compile("<b> Searched for '{{query}}'</b>")
+
+                }
+            };
+
+            var typeaheadSettings4 = {
+                hint: false,
+                highlight: true,
+                minLength: 1,
+                display: Handlebars.compile('{{siteCode}}'),
+                source: sname.ttAdapter(),
+                cache: false,
+                classNames: {
+                    open: 'is-open',
+                    empty: 'is-empty',
+                    cursor: 'is-active',
+                    suggestion: 'Typeahead-suggestion',
+                    selectable: 'Typeahead-selectable'
+                },
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'Unable to find any sites that match the current query',
+                        '</div>'
+                    ].join('\n'),
+                    //<p style='padding:6px'><img width=50 src='{{poster_path}}'> <b>{{value}}</b> - Release date {{release_date}} </p>
+                    suggestion: Handlebars.compile('<div><label>{{siteCode}}</label> - <label class="pull-right">{{siteName}}</label></div>'),
+                    footer: Handlebars.compile("<b> Searched for '{{query}}'</b>")
+
+                }
+            };
+
+            // Instantiate the Typeahead UI
+            $('#txtSenderPostalCode').typeahead('destroy');
+            $('#txtReceiverPostalCode').typeahead('destroy');
+            $('#txtSenderSite').typeahead('destroy');
+            $('#txtReceiverSite').typeahead('destroy');
+
+            $('#txtSenderPostalCode').typeahead(null, typeaheadSettings).on("typeahead:selected", function (obj, selectedItem) {
+                $("#SenderPostalCode").val(selectedItem.postalCode);
+                $("#SenderSuburb").val(selectedItem.name);
+            });
+            $('#txtReceiverPostalCode').typeahead(null, typeaheadSettings2).on("typeahead:selected", function (obj, selectedItem) {
+                $("#ReceiverPostalCode").val(selectedItem.postalCode);
+                $("#ReceiverSubrub").val(selectedItem.name);
+            });
+
+            $('#txtSenderSite').typeahead(null, typeaheadSettings3).on("typeahead:selected", function (obj, selectedItem) {
+                $("#CollectionRequests_SendAdd1").val(selectedItem.addressPhysical.streetAdd1);
+                $("#CollectionRequests_SendAdd2").val(selectedItem.addressPhysical.streetAdd2);
+                $("#CollectionRequests_SendAdd3").val(selectedItem.addressPhysical.streetAdd3);
+                $("#CollectionRequests_SendAdd4").val(selectedItem.addressPhysical.streetAdd4);
+                $("#CollectionRequests_SendAddPostalCode").val(selectedItem.addressPhysical.streetAdd5);
+                $("#CollectionRequests_SendName").val(selectedItem.siteName);
+                $("#CollectionRequests_SendContact").val(selectedItem.contactPerson);
+                $("#CollectionRequests_SendTelNo").val(selectedItem.telephoneNo.replace(/ /g, ""));
+                //$("#SenderContactEmail").val(selectedItem.email);
+            });
+
+            $('#txtReceiverSite').typeahead(null, typeaheadSettings4).on("typeahead:selected", function (obj, selectedItem) {
+                $("#CollectionRequests_RecAdd1").val(selectedItem.addressPhysical.streetAdd1);
+                $("#CollectionRequests_RecAdd2").val(selectedItem.addressPhysical.streetAdd2);
+                $("#CollectionRequests_RecAdd3").val(selectedItem.addressPhysical.streetAdd3);
+                $("#CollectionRequests_RecAdd4").val(selectedItem.addressPhysical.streetAdd4);
+                $("#CollectionRequests_RecAddPostalCode").val(selectedItem.addressPhysical.streetAdd5);
+                $("#CollectionRequests_RecName").val(selectedItem.siteName);
+                $("#CollectionRequests_RecContact").val(selectedItem.contactPerson);
+                $("#CollectionRequests_RecTelNo").val(selectedItem.telephoneNo.replace(/ /g, ""));
+                //$("#ReceiverContactEmail").val(selectedItem.email);
+            });
+
+        };
+    </script>
+}
+

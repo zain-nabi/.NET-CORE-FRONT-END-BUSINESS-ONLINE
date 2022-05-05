@@ -1,0 +1,33 @@
+﻿@{
+    string title = this.ViewData.ContainsKey("TitleText") ? this.ViewData["TitleText"].ToString() : "Report";
+    string titleSubText = this.ViewData.ContainsKey("TitleSubText") ? this.ViewData["TitleSubText"].ToString() : "Report information will be shown here";
+}
+
+
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Hero Section -->
+            <div class="container space-2">
+                <div class="row justify-content-lg-between align-items-lg-center">
+                    <div class="col-sm-10 col-lg-5 mb-7 mb-lg-0">
+                        <img class="img-fluid" src="~/front-dashboard-v1.1/dist/assets/svg/illustrations/knowledgebase-community-1.svg" alt="Image Description" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-5">
+                            <h1 class="display-4 mb-3">
+                                @title
+                                <br>
+                                <span class="text-primary font-weight-bold">
+                                    <span class="js-text-animation"></span>
+                                </span>
+                            </h1>
+                            <p class="lead">@titleSubText</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Hero Section -->
+        </div>
+    </div>

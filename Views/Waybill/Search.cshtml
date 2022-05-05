@@ -1,0 +1,250 @@
+﻿@using Microsoft.Extensions.Configuration
+@model WaybillSearchModel
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Triton Express";
+    ViewData["Header"] = "Waybill";
+    ViewData["HeaderBold"] = "Search";
+    ViewData["Description"] = "Search for a waybill";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Waybill</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Search</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Waybills</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- Hero Section -->
+        <div id="SVGfiles">
+            <form asp-controller="Waybill" asp-action="Search" class="js-validate">
+                <div class="form-group" data-select2-id="54">
+                    <div class="js-form-message">
+                        <div class="input-group input-group-merge mb-2 mb-sm-0" data-select2-id="53" style="display: flex; justify-content: center;width:50%;">
+                            <div class="input-group-prepend" id="fullName">
+                                <span class="input-group-text">
+                                    <i class="tio-search"></i>
+                                </span>
+                            </div>
+                            <input id="Search" type="text" asp-for="SearchText" class="form-control" placeholder="Search for a waybill" aria-label="Search for waybill" required data-msg="This field is required." aria-describedby="SearchForWaybill">
+
+                            <div class="input-group-append input-group-append-last-sm-down-none" data-select2-id="52">
+                                <div id="permissionSelect" class="select2-custom select2-custom-right" data-select2-id="permissionSelect" style="width:200px">
+                                    <select class="js-select2-custom custom-select select2-hidden-accessible" size="1" style="opacity: 0;" data-hs-select2-options="{
+                                                &quot;dropdownParent&quot;: &quot;#permissionSelect&quot;,
+                                                &quot;minimumResultsForSearch&quot;: &quot;Infinity&quot;,
+                                                &quot;dropdownAutoWidth&quot;: true,
+                                                &quot;dropdownWidth&quot;: &quot;11rem&quot;
+                                                }" data-select2-id="17" tabindex="-1" aria-hidden="true" asp-for="LookUpCodeID">
+                                        @foreach (var item in Model.WaybillSearchItemList)
+                                        {
+                                            <option data-select2-id="@item.LookUpCodeID" value="@item.LookUpCodeID">@item.Detail</option>
+                                        }
+                                    </select>
+                                    <span class="select2 select2-container select2-container--default select2-container--below" dir="ltr" data-select2-id="18" style="width: 100%; top: 0px;">
+                                        <span class="dropdown-wrapper" aria-hidden="true"></span>
+                                    </span>
+
+                                </div>
+                                <input type="submit" class="btn btn-primary d-none d-sm-block" value="Search" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <br />
+            <br />
+            @*<div class="container space-1">*@
+            <!-- Card -->
+            @if (Model.ShowReport == false)
+            {
+                <partial name="_RenderSearchScreenCard" view-data='@new ViewDataDictionary(ViewData) { { "TitleText", "Report" },{ "TitleSubText", "Report information will be shown here" } }' />
+            }
+            else
+            {
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header">
+                <div class="row justify-content-between align-items-center flex-grow-1">
+                    <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                        <form>
+                            <!-- Search -->
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tio-search"></i>
+                                    </div>
+                                </div>
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                            </div>
+                            <!-- End Search -->
+                        </form>
+                    </div>
+                    <div class="col-auto">
+                        <!-- Select -->
+                        <select class="js-select2-custom js-datatable-filter custom-select" size="1" style="opacity: 0;"
+                                data-target-column-index="1"
+                                data-hs-select2-options='{
+                      "minimumResultsForSearch": "Infinity",
+                      "customClass": "custom-select custom-select-sm custom-select-borderless",
+                      "dropdownAutoWidth": true,
+                      "width": true
+                    }'>
+                            @foreach (var item in Model.WaybillStatusTypes)
+                            {
+                                <option value="@item.WaybillStatus">@item.WaybillStatus</option>
+                            }
+
+                        </select>
+                        <!-- End Select -->
+                    </div>
+                </div>
+                <!-- End Row -->
+            </div>
+            <!-- End Header -->
+            <!-- Table -->
+            <div class="table-responsive datatable-custom">
+                <div id="datatable_wrapper" class="dataTables_wrapper">
+                    <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                           data-hs-datatables-options='{
+                     "order": [],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Customer</th>
+                                <th>Waybill number</th>
+                                <th>Status</th>
+                                <th>Service</th>
+                                <th>Site customer</th>
+                                <th>ETA</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.VwOpsWaybill)
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="d-flex align-items-center" href="#">
+                                            <div class="avatar avatar-soft-primary avatar-circle">
+                                                <span class="avatar-initials">@item.CustomerName.Substring(0, 1)</span>
+                                            </div>
+                                            <div class="ml-3">
+                                                <span class="d-block h5 text-hover-primary mb-0">@item.CustomerName</span>
+                                                <span class="d-block font-size-sm text-body">@item.AccountCode</span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    @*<td class="table-column-pl-0">
+                                    <a class="d-flex align-items-center" href="project.html">
+                                        <div class="avatar avatar-soft-primary avatar-circle">
+                                            <span class="avatar-initials">@item.CustomerName.Substring(0, 1)</span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <span class="d-block h5 text-hover-primary mb-0">@item.CustomerName</span>
+                                            <span class="d-block font-size-sm text-body">@item.AccountCode</span>
+                                        </div>
+                                    </a>
+                                </td>*@
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @item.WaybillNo
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="legend-indicator @(item.WaybillStatusID >= 17 ? "bg-success" : "bg-danger")"></span>@item.ShortDesc
+                                    </td>
+
+                                    <td>
+                                        @item.ServiceLevel
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @item.SiteCustomerName
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        @if (item.DelExpectedDateTimeStamp != null)
+                                        {
+                                            <span class="d-block h5 mb-0"> @item.DelExpectedDateTimeStamp.Value.ToString("dd MMMM yyyy")</span>
+                                            <span class="d-block font-size-sm"> @item.DelExpectedDateTimeStamp.Value.ToString("hh:mm:tt")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-white" href="@Url.Action("Info", "Waybill", new {waybillId = item.WaybillID})">
+                                            <i class="tio-receipt-outlined mr-1"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Table -->
+            <!-- Footer -->
+            <div class="card-footer">
+                <!-- Pagination -->
+                <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                    <div class="col-sm-auto">
+                        <div class="d-flex justify-content-center justify-content-sm-end">
+                            <!-- Pagination -->
+                            <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Pagination -->
+            </div>
+            <!-- End Footer -->
+
+        </div>
+            }
+            <!-- End Card -->
+            @*</div>*@
+        </div>
+        <!-- End Hero Section -->
+        <!-- End Content Section -->
+    </div>
+</main>
+
+<script>
+    $(document).on('ready', function () {
+        // INITIALIZATION OF FORM VALIDATION
+        // =======================================================
+        $('.js-validate').each(function () {
+            $.HSCore.components.HSValidation.init($(this));
+        });
+    });
+</script>

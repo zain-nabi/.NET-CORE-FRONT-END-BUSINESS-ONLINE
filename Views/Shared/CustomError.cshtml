@@ -1,0 +1,53 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Triton Express Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    <div class="container">
+        <img src="~/front-dashboard-v1.1/dist/assets/svg/illustrations/error-404.svg" class="formClass" />
+        <h1 id="NoCustomers">@Html.Raw(ViewData["Heading"])</h1>
+        <span id="ErrorMessage">@Html.Raw(ViewData["ErrorMessage"])</span>
+    </div>
+</main>
+<!-- ========== END MAIN ========== -->
+
+<style>
+    .container img {
+        width: 100%;
+        height: auto;
+    }
+
+    .container #NoCustomers {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: black;
+        padding: 12px 24px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .container #ErrorMessage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: 60px;
+        transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        color: black;
+        font-size: 16px;
+        padding: 12px 24px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+</style>

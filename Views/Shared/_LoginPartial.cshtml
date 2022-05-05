@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Triton.Model.TritonGroup.Tables
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+
+<ul class="list-unstyled u-sidebar--account__list">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="u-sidebar--account__list-item">
+        <a  class="u-sidebar--account__list-link" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" title="Manage"><span class="fad fa-unlock u-sidebar--account__list-icon mr-2"></span>Change Password</a>
+    </li>
+    <li class="u-sidebar--account__list-item">
+        <form class="" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("LoginRedirect", "Home")">
+            <button type="submit" class="u-sidebar--account__list-link btn btn-link">
+                <span class="fas fa-sign-out-alt u-sidebar--account__list-icon mr-2"></span>
+                Sign Out
+            </button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>

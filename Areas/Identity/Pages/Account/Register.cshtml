@@ -1,0 +1,184 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Users</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">New User</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Create</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <form class="js-validate" method="post">
+            <div class="card mb-3 mb-lg-5">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">New User <i class="tio-verified text-primary"></i></h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">First Name</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="text" class="form-control" asp-for="Input.FirstName" required id="txtFirstName">
+                                    <span style="color: #ed4c78;display: none;font-size: 80%;" id="spnError1">Please enter alphabets only</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Phone Number</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="number" class="form-control" asp-for="Input.PhoneNumber" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Password</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="password" id="password" class="form-control" asp-for="Input.Password" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Role</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <select class="js-select2-custom custom-select" size="1" style="opacity: 0;" asp-for="Input.RoleID" required id="ddlRoles"
+                                            data-msg="Phone select a role"
+                                            data-hs-select2-options='{
+                                                "minimumResultsForSearch": "Infinity",
+                                                "placeholder": "Select Role"
+                                                }'>
+                                        <option label="empty"></option>
+                                        @foreach (var item in Model.RoleList)
+                                        {
+                                            <option value="@item.RoleID">@item.RoleName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Last Name</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="text" class="form-control" asp-for="Input.LastName" required id="txtLastName">
+                                    <span style="color: #ed4c78;display: none;font-size: 80%;" id="spnError2">Please enter alphabets only</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Email</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="email" class="form-control" asp-for="Input.Email" required>
+                                    <span style="color:#ed4c78;font-size: 80%;">@Model.EmailExist</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Confirm Password</label>
+                                <div class="col-sm-9 js-form-message">
+                                    <input type="password" class="form-control" asp-for="Input.ConfirmPassword" required data-parsley-required="true" data-parsley-required-message="Password does not match the confirm password." data-rule-equalTo="#password" />
+                                </div>
+                            </div>
+                            <div class="form-group row" id="ddlCustomers" style="visibility:hidden;">
+                                <label class="col-sm-3 col-form-label">Customer</label>
+                                <div class="col-sm-9 js-form-message rowClass">
+                                    <select id="Customers" class="js-select2-custom custom-select formClass" size="1" multiple style="opacity: 0;" asp-for="Input.CustomerID" onchange="getSelects()"
+                                            data-msg="Phone select a customer"
+                                            data-hs-select2-options='{
+                                                "minimumResultsForSearch": "Infinity",
+                                                "placeholder": "Select Customer"
+                                                }'>
+                                        <option label="empty"></option>
+                                        @foreach (var item in Model.CustomerList)
+                                        {
+                                            <option value="@item.CustomerID">@item.CustomerName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedText" asp-for="Input.CustomerText" />
+                    <!-- End Row -->
+                </div>
+                <!-- End Body -->
+                <div class="card-footer w-100">
+                    <div class="text-right">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-white">Cancel</a>
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    }
+</main>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).on('ready', function () {
+            var selectedVal = $('#ddlRoles :selected').text()
+            if (selectedVal == "Customer") {
+                $('#ddlCustomers').css('visibility', 'visible');
+            } else {
+                $('#ddlCustomers').css('visibility', 'hidden');
+            }
+        });
+
+
+        $(function () {
+            $("#txtLastName").on("change", function () {
+                var isValid = false;
+                var regex = /^[a-zA-Z ]*$/;
+                isValid = regex.test($("[id*=txtLastName]").val());
+                $("#spnError2").css("display", !isValid ? "block" : "none");
+                return isValid;
+            });
+        });
+
+
+        $(function () {
+            $("#txtFirstName").on("change", function () {
+                var isValid = false;
+                var regex = /^[a-zA-Z ]*$/;
+                isValid = regex.test($("[id*=txtFirstName]").val());
+                $("#spnError1").css("display", !isValid ? "block" : "none");
+                return isValid;
+            });
+        });
+
+        $("#ddlRoles").change(function () {
+            var selectedVal = $('#ddlRoles :selected').text()
+            if (selectedVal == "Customer") {
+                $('#ddlCustomers').css('visibility', 'visible');
+            } else {
+                $('#ddlCustomers').css('visibility', 'hidden');
+            }
+        });
+
+          function getSelects() {
+            var items;
+            $('#selectedText').val('');
+            items = $("#Customers > option:selected").map(function () {
+                    var opt = {};
+                          opt["CustomerID"] = $(this).val();
+                    return opt;
+                }).get();
+
+              $('#selectedText').val(encodeURIComponent(JSON.stringify(items)));
+              console.log(items)
+        }
+    </script>
+}

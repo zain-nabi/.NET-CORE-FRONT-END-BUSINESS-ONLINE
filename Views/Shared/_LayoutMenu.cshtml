@@ -1,0 +1,163 @@
+﻿@using System.IO
+@using System.Security.Claims
+@using System.Xml.Linq
+@using Microsoft.Extensions.Configuration
+@using Triton.BusinessOnline.Areas.Identity.Pages.Account
+@inject IConfiguration Configuration
+@*@{
+        var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+        const string node = "mvcSiteMapNode";
+
+        var xElement = XElement.Load($"{Directory.GetCurrentDirectory()}/Sitemap.xml");
+
+        var siteMap = from xml in xElement.Elements(node)
+                      where xml.Element(node)?.Attribute("roles") == null || xml.Element(node).Attribute("roles").ToString().Trim().Contains(role)
+                      select xml;
+
+        var dictionary = new Dictionary<LoginModel.ParentMenu, List<LoginModel.SubMenu>>();
+
+        foreach (var site in siteMap)
+        {
+            var parentMenu = new LoginModel.ParentMenu();
+            parentMenu.Title = site.Attribute("title")?.Value;
+            parentMenu.Icon = site.Attribute("icon")?.Value;
+            var subMenu = new List<LoginModel.SubMenu>();
+            foreach (var item in site.Elements(node))
+            {
+                if (item.Attribute("roles") == null || item.Attribute("roles").Value.Contains(role))
+                {
+                    subMenu.Add(new LoginModel.SubMenu
+                    {
+                        Title = item.Attribute("title")?.Value,
+                        Controller = item.Attribute("controller")?.Value,
+                        Action = item.Attribute("action")?.Value,
+                        Role = item.Attribute("roles")?.Value
+                    });
+                }
+            }
+
+            if (parentMenu != null)
+            {
+                dictionary.Add(parentMenu, subMenu);
+            }
+        }
+    }*@
+@{
+    // Claims
+    var claimsRoleList = User.FindFirst(ClaimTypes.Role)?.Value;
+
+    var roles = string.Join(", ", claimsRoleList);
+
+    // Sitemap
+    const string node = "mvcSiteMapNode";
+
+    var xElement = XElement.Load($"{Directory.GetCurrentDirectory()}/Sitemap.xml");
+    var siteMap = from xml in xElement.Elements(node) select xml;
+}
+
+<div class="navbar-nav-wrap-content-left collapse navbar-collapse" id="navbarNavMenu">
+    <div class="navbar-body">
+        <ul class="navbar-nav flex-grow-1">
+            @foreach (var site in siteMap)
+            {
+                var header = site.Attribute("mainTitle")?.Value;
+                var icon = site.Attribute("icon")?.Value;
+                <!-- Pages -->
+                <li class="hs-has-sub-menu">
+                    <a id="pagesDropdown" class="hs-mega-menu-invoker navbar-nav-link nav-link nav-link-toggle" href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="navLinkPagesDropdown-@header">
+                        <i class="@icon nav-icon"></i> @header
+                    </a>
+
+                    <!-- Dropdown -->
+                    <ul id="navLinkPagesDropdown-@header" class="hs-sub-menu dropdown-menu dropdown-menu-lg hs-sub-menu-desktop-lg animated" aria-labelledby="pagesDropdown-@header" style="min-width: 16rem; animation-duration: 300ms;">
+                        @foreach (var item in site.Elements("mvcSiteMapSubTitle"))
+                        {
+                            var subTitle = item.Attribute("subTitle")?.Value;
+                            var subMenuController = item.Attribute("controller")?.Value;
+                            var subMenuAction = item.Attribute("action")?.Value;
+                            @if (subMenuController != null)
+                            {
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action(subMenuAction, subMenuController)">
+                                        <span class="tio-circle nav-indicator-icon"></span> @subTitle
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <!-- Users -->
+                                <li class="hs-has-sub-menu">
+                                    <a id="pagesDropdownUsers-@subTitle" class="hs-mega-menu-invoker dropdown-item dropdown-item-toggle" href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-controls="navLinkPagesDropdown-@subTitle-Users">
+                                        <span class="tio-circle nav-indicator-icon"></span> @subTitle
+                                    </a>
+
+                                    <ul id="navLinkPagesDropdown-@subTitle-Users" class="hs-sub-menu dropdown-menu dropdown-menu-lg hs-sub-menu-desktop-lg animated" aria-labelledby="pagesDropdownUsers-@subTitle" style="min-width: 16rem; animation-duration: 300ms;">
+                                        @foreach (var child in item.Elements("mvcSiteMapSubTitleChild"))
+                                        {
+                                            var childTitle = child.Attribute("childTitle")?.Value;
+                                            var controller = child.Attribute("controller")?.Value;
+                                            var action = child.Attribute("action")?.Value;
+
+                                            <li>
+                                                <a class="dropdown-item" href="@Url.Action(action, controller)">
+                                                    <span class="tio-circle-outlined nav-indicator-icon"></span> @childTitle
+                                                </a>
+                                            </li>
+                                            @*if (child.Attribute("roles") != null)
+                                        {
+                                            var occurrences = child.Attribute("roles").Value.Split(',').Select(s => s.Trim()).Intersect(roles.Split(',').Select(s => s.Trim()));
+                                            if (occurrences.Count() > 0)
+                                            {
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action(action, controller)">
+                                                        <span class="tio-circle-outlined nav-indicator-icon"></span> @childTitle
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="@Url.Action(action, controller)">
+                                                    <span class="tio-circle-outlined nav-indicator-icon"></span> @childTitle
+                                                </a>
+                                            </li>
+                                        }*@
+                                        }
+                                    </ul>
+
+
+                                </li>
+                            }
+                        }
+                        <!-- End Users -->
+                    </ul>
+                    <!-- End Dropdown -->
+                </li>
+                <!-- End Pages -->
+            }
+            @if (User.IsInRole("Administrator"))
+            {
+            <!-- Pages -->
+            <li class="hs-has-sub-menu">
+                <a id="pagesDropdown" class="hs-mega-menu-invoker navbar-nav-link nav-link nav-link-toggle" href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="navLinkPagesDropdown-Users">
+                    <i class="fas fa-user nav-icon"></i> Users
+                </a>
+
+                <!-- Dropdown -->
+                <ul id="navLinkPagesDropdown-Users" class="hs-sub-menu dropdown-menu dropdown-menu-lg hs-sub-menu-desktop-lg animated" aria-labelledby="pagesDropdown-Users" style="min-width: 16rem; animation-duration: 300ms;">
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("ListUsers", "Admin")">
+                            <span class="tio-circle-outlined nav-indicator-icon"></span> Overview
+                        </a>
+                    </li>
+                    <!-- End Users -->
+                </ul>
+                <!-- End Dropdown -->
+            </li>
+            }
+        </ul>
+    </div>
+</div>

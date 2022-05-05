@@ -1,0 +1,204 @@
+﻿@using Microsoft.Extensions.Configuration
+@using System.Globalization
+@model List<Triton.Model.CRM.Views.vwOpsWaybills>
+@inject IConfiguration Configuration
+@{
+    var textInfo = new CultureInfo("en-US", false).TextInfo;
+}
+
+
+<div class="container">
+    <div class="card">
+        <div class="card-body p-4">
+            <!-- Activity Menu -->
+            <div class="row justify-content-sm-between align-items-sm-center">
+                <div class="col-md-6">
+                    &nbsp;
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            <!-- Select -->
+                            <select id="datatableEntries" class="js-select selectpicker dropdown-select" data-width="fit" data-style="btn-soft-primary btn-sm">
+                                <option value="10" selected>10 entries</option>
+                                <option value="20">20 entries</option>
+                                <option value="30">30 entries</option>
+                                <option value="40">40 entries</option>
+                            </select>
+                            <!-- End Select -->
+                        </div>
+
+                        <!-- Search -->
+                        <div class="js-focus-state input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="searchActivities">
+                                    <span class="fas fa-search"></span>
+                                </span>
+                            </div>
+                            <input id="datatableSearch" type="email" class="form-control" placeholder="Search" aria-label="Search activities" aria-describedby="searchActivities">
+                        </div>
+                        <!-- End Search -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Activity Menu -->
+        </div>
+        <div class="table-responsive-md u-datatable">
+            <table class="js-datatable table table-borderless u-datatable__striped u-datatable__content u-datatable__trigger mb-5"
+                   data-dt-info="#datatableInfo"
+                   data-dt-search="#datatableSearch"
+                   data-dt-entries="#datatableEntries"
+                   data-dt-page-length="10"
+                   data-dt-is-responsive="true"
+                   data-dt-is-show-paging="true"
+                   data-dt-details-invoker=".js-datatabale-details"
+                   data-dt-select-all-control="#invoiceToggleAllCheckbox"
+                   data-dt-pagination="datatablePagination"
+                   data-dt-pagination-classes="pagination mb-0"
+                   data-dt-pagination-items-classes="page-item"
+                   data-dt-pagination-links-classes="page-link"
+                   data-dt-pagination-next-classes="page-item"
+                   data-dt-pagination-next-link-classes="page-link"
+                   data-dt-pagination-next-link-markup='<span aria-hidden="true">»</span>'
+                   data-dt-pagination-prev-classes="page-item"
+                   data-dt-pagination-prev-link-classes="page-link"
+                   data-dt-pagination-prev-link-markup='<span aria-hidden="true">«</span>'>
+                <thead>
+                    <tr class="text-uppercase font-size-1">
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Waybill No
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Account
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Service
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Site Customer
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Status
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Expected Delivery
+                                <div class="ml-2">
+                                    <span class="fas fa-angle-up u-datatable__thead-icon"></span>
+                                    <span class="fas fa-angle-down u-datatable__thead-icon"></span>
+                                </div>
+                            </div>
+                        </th>
+
+                        <th scope="col" class="font-weight-medium">
+                            <div class="d-flex justify-content-between align-items-center">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="font-size-1">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="">
+                            <td class="align-middle text-secondary font-weight-normal">
+                                @item.WaybillNo
+                            </td>
+
+                            <td class="align-middle">
+                                <div class="media align-items-center text-primarytext-primary">
+                                    @textInfo.ToTitleCase(item.CustomerName.ToLower())
+                                </div>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="media align-items-center">
+                                    @item.ServiceLevel
+                                </div>
+                            </td>
+
+                            <td class="align-middle">
+                                <div class="media align-items-center">
+                                    @(item.ReceiverSiteName == null ? "N/A" : textInfo.ToTitleCase(item.ReceiverSiteName.ToLower()))
+                                </div>
+                            </td>
+
+                            <td class="align-middle">
+                                <div class="media align-items-center">
+                                    <span class="fas fa-circle @(item.WaybillStatusID >= 17 ? "text-success" : "text-danger") small mr-1"></span>
+                                    @textInfo.ToTitleCase(item.WaybillStatus.ToLower())
+                                </div>
+                            </td>
+
+                            <td class="align-middle">
+                                <div class="media align-items-center text-secondary">
+                                    @if (item.DelExpectedDateTimeStamp != null)
+                                    {
+                                        @item.DelExpectedDateTimeStamp.Value.ToString("dd MMMM yyyy hh:mm:tt")
+                                    }
+                                    else
+                                    {
+                                        <span>N/A</span>
+                                    }
+                                </div>
+                            </td>
+
+                            <td class="align-right">
+                                <div class="position-relative text-center">
+                                    <a id="settingsDropdown1Invoker-@item.WaybillID" class="btn btn-sm btn-icon btn-soft-secondary btn-bg-transparent rounded" href="javascript:;" role="button" aria-controls="settingsDropdown-@item.WaybillID" aria-haspopup="true" aria-expanded="false" data-unfold-event="click" data-unfold-target="#settingsDropdown-@item.WaybillID" data-unfold-type="css-animation" data-unfold-duration="300" data-unfold-delay="300" data-unfold-hide-on-scroll="true" data-unfold-animation-in="slideInUp" data-unfold-animation-out="fadeOut">
+                                        <span class="fas fa-ellipsis-h btn-icon__inner"></span>
+                                    </a>
+
+                                    <div id="settingsDropdown-@item.WaybillID" class="dropdown-menu dropdown-unfold dropdown-menu-right u-unfold--css-animation u-unfold--hidden fadeOut" aria-labelledby="settingsDropdown1Invoker-@item.WaybillID" style="min-width: 160px; animation-duration: 300ms; right: 0px;">
+                                        <a class="dropdown-item" href="@Url.Action("Info", "Waybill", new { waybillId = item.WaybillID})">
+                                            <small class="fas fa-info-circle dropdown-item-icon"></small>
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+            <small id="datatableInfo" class="text-secondary"></small>
+        </div>
+    </div>
+</div>

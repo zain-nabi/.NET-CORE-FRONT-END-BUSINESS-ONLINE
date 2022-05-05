@@ -1,0 +1,31 @@
+﻿@model Triton.BusinessOnline.Models.MessageModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <div class="row justify-content-sm-center text-center py-10">
+            <div id="SuccessMessage" style="">
+                <div class="text-center">
+                    @if (String.IsNullOrEmpty(Model.ImgUrl))
+                    {
+                        <span><i class="@Model.Icon"></i></span>
+                    }
+                    else
+                    {
+                        <img class="img-fluid mb-3" src=@Model.ImgUrl alt="Image Description" style="max-width: 15rem;">
+                    }
+                    <div class="mb-4">
+                        <h2>@Model.Title</h2>
+                        <p>@Model.Message</p>
+                    </div>
+
+                    <a class="btn btn-primary" href="@Model.Url">@Model.ButttonText </a>
+                </div>
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>

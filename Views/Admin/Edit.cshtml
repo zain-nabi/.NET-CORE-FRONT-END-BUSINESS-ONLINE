@@ -1,0 +1,216 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Triton.BusinessOnline.Models.AdminModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><span class="breadcrumb-link">CRM</span></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Edit</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- For Validation -->
+        <!-- End For Validation -->
+        <div class="row justify-content-lg-center">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header bg-soft-secondary">
+                        <h5 class="card-header-title">Edit User</h5>
+                    </div>
+
+                    <form class="js-validate" asp-controller="Admin" asp-action="Edit" method="post">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">First Name</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.ExternalUserModel.FirstName, new { @class = "form-control", id = "txtFirstName", placeholder = "First Name" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Last Name</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.ExternalUserModel.LastName, new { @class = "form-control", id = "txtLastName", placeholder = "Last Name" })
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                <label class="col-sm-3 col-form-label">User Name</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.ExternalUserModel.UserName, new { @class = "form-control", id = "txtUsername", placeholder = "User Name" })
+                                </div>
+                            </div>*@
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Email</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.ExternalUserModel.Email, new { @class = "form-control", id = "txtEmail", placeholder = "Email" })
+                                    <span style="color:#ed4c78;font-size: 80%;">@Model.EmailExistErrorMessage</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Phone Number</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(model => model.ExternalUserModel.PhoneNumber, new { @class = "form-control", id = "txtPhoneNumber", placeholder = "Phone Number" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Active</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(model => model.ExternalUserModel.LockoutEnabled, new List<SelectListItem>()
+                                         {
+                                           new SelectListItem() { Text= "Yes", Value = "true" },
+                                           new SelectListItem() { Text= "No", Value = "false" }
+                                         }, new { @class = "js-select2-custom custom-select", @size = "1", @name = "LockoutEnabled", @style = "opacity: 0;" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Role</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(model => model.ExternalUserModel.RoleID, new SelectList(Model.RoleList, "RoleID", "RoleName"), new { @class = "js-select2-custom custom-select", @size = "1", @name = "RoleID", @style = "opacity: 0;", id = "ddlRoles" })
+                                </div>
+                            </div>
+                            <div class="form-group row" id="ddlCustomers" style="visibility:hidden;">
+                                <label class="col-sm-3 col-form-label">Customer</label>
+                                <div class="col-sm-9 rowClass">
+                                    <select id="Customers" class="js-select2-custom custom-select myClass" name="CustomerID" multiple size="1" style="opacity: 0;" asp-for="CustomerID" onchange="getSelects()"
+                                            data-hs-select2-options='{
+                                           "minimumResultsForSearch": "Infinity"
+                                         }'>
+                                        @{
+                                            var selectedCustomer = Model.CustomerList.Where(x => Model.SelectedCustomers.Any(c => c.CustomerID == x.CustomerID));
+                                            var Customers = Model.CustomerList.Where(x => !Model.SelectedCustomers.Any(c => c.CustomerID == x.CustomerID));
+                                        }
+                                        @foreach (var item in selectedCustomer)
+                                        {
+                                            <option value="@item.CustomerID" selected>@item.CustomerName</option>
+                                        }
+                                        @foreach (var item in Customers)
+                                        {
+                                            <option value="@item.CustomerID">@item.CustomerName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="hidden" value="@Model.ExternalUserModel.ExternalUserID" name="ExternalUserID" />
+                            @Html.HiddenFor(model => model.ExternalUserID)
+                            @Html.HiddenFor(model => model.ExternalUserModel.FirstName)
+                            @Html.HiddenFor(model => model.ExternalUserModel.EmailConfirmed)
+                            @Html.HiddenFor(model => model.ExternalUserModel.PhoneNumberConfirmed)
+                            @Html.HiddenFor(model => model.ExternalUserModel.SecurityStamp)
+                            @Html.HiddenFor(model => model.ExternalUserModel.PasswordHash)
+                            @Html.HiddenFor(model => model.ExternalUserModel.LockoutEndDateUtc)
+                            @Html.HiddenFor(model => model.ExternalUserModel.LockoutEnabled)
+                            @Html.HiddenFor(model => model.ExternalUserModel.AccessFailedCount)
+                            <input type="hidden" id="selectedText" asp-for="@Model.CustomerText" />
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-right">
+                                <a href="@Url.Action("ListUsers","Admin")" class="btn btn-white">Cancel</a>
+                                <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+</main>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            var selectedVal = $('#ddlRoles :selected').text()
+            if (selectedVal == "Customer") {
+                $('#ddlCustomers').css('visibility', 'visible');
+            } else {
+                $('#ddlCustomers').css('visibility', 'hidden');
+            }   
+
+
+            $('#selectedText').val('');
+            var items = $("#Customers > option:selected").map(function () {
+                var opt = {};
+                opt["CustomerID"] = $(this).val();
+                opt["ExternalUserID"] = @Model.ExternalUserModel.ExternalUserID;
+                return opt;
+            }).get();
+
+
+            $('#selectedText').val(encodeURIComponent(JSON.stringify(items)));
+
+            if ($("#Customers").val().length == 0)
+            {
+                items = $('.rowClass').map(function () {
+                    var obj = {};
+                    $(this).find('select.myClass').each(function (i, el) {
+                        var values = $(this).val();
+                        if (!values.length) {
+                            obj["ExternalUserID"] = @Model.ExternalUserModel.ExternalUserID;
+                        }
+                    })
+                    return obj
+                }).get()
+
+
+                $('#selectedText').val(encodeURIComponent(JSON.stringify(items)));
+            }
+
+        });
+        function getSelects() {
+            var items;
+            $('#selectedText').val('');
+            if ($("#Customers").val().length == 0)
+            {
+                items = $('.rowClass').map(function () {
+                    var obj = {};
+                    $(this).find('select.myClass').each(function (i, el) {
+                        var values = $(this).val();
+                        if (!values.length) {
+                            obj["ExternalUserID"] = @Model.ExternalUserModel.ExternalUserID;
+                        }
+                    })
+                    return obj
+                }).get()
+
+
+                $('#selectedText').val(encodeURIComponent(JSON.stringify(items)));
+            }
+            else
+            {
+                items = $("#Customers > option:selected").map(function () {
+                    var opt = {};
+                          opt["CustomerID"] = $(this).val();
+                          opt["ExternalUserID"] = @Model.ExternalUserModel.ExternalUserID;
+                    return opt;
+                }).get();
+
+                $('#selectedText').val(encodeURIComponent(JSON.stringify(items)));
+            }
+        }
+
+        $("#ddlRoles").change(function () {
+            var selectedVal = $('#ddlRoles :selected').text()
+            if (selectedVal == "Customer") {
+                $('#ddlCustomers').css('visibility', 'visible');
+            } else {
+                $('#ddlCustomers').css('visibility', 'hidden');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,156 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model EditCustomerModel
+
+@{
+    ViewData["Title"] = "Assign Customers";
+
+    ViewData["Header"] = "Customer";
+    ViewData["HeaderBold"] = "Administration";
+    ViewData["Description"] = "Maintain all the customers assigned to the user";
+
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<!-- Hero Section -->
+<div id="SVGfiles" class="svg-preloader bg-light position-relative z-index-2">
+    <div class="container">
+        <!-- Title -->
+        @*<div class="mb-7">
+            <span class="d-block text-secondary">Search for a customer to link to</span>
+            <h1 class="text-primary font-weight-semi-bold">@Model.Name</h1>
+        </div>*@
+        <!-- End Title -->
+        <!-- Search Jobs Form -->
+        <form class="row mb-2" method="post">
+            <div class="col-md-10">
+                <!-- Input -->
+                <label class="d-block">
+                    <span class="h6 d-block text-dark font-weight-semi-bold mb-0">Customer search</span>
+                </label>
+                <div class="js-focus-state">
+                    <div class="input-group">
+                        <input class="form-control" id="txtCustomer" asp-for="@Model.Name" name="txtCustomer" placeholder="Search Customers" type="text" value="" />
+                    </div>
+                </div>
+                <!-- End Input -->
+            </div>
+
+            <div class="col-lg-2 align-self-lg-end">
+                <button type="submit" class="btn btn-block btn-primary transition-3d-hover">Add</button>
+            </div>
+            <!-- End Checkbox -->
+            <input id="SelectedID" asp-for="@Model.SelectedID" name="SelectedID" type="hidden" value="" />
+        </form>
+        <!-- End Search Jobs Form -->
+    </div>
+
+    <!-- SVG Icon -->
+    <div class="d-none d-lg-block w-100 position-absolute bottom-0 right-0 z-index-n1 max-width-27">
+        <figure class="ie-files">
+            <img class="js-svg-injector" src="@template/assets/svg/illustrations/files.svg" alt="Image Description"
+                 data-parent="#SVGfiles">
+        </figure>
+    </div>
+    <!-- End SVG Icon -->
+</div>
+<!-- End Hero Section -->
+<main class="container space-1">
+    <div class="card bg-light p-5">
+        <!-- Total Price -->
+        <div class="mb-4">
+            <span class="h6 text-secondary font-weight-normal ml-3">@Model.Name is associated with the below customer accounts:</span>
+        </div>
+        <!-- End Total Price -->
+        <!-- Stats -->
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Progress -->
+                <div class="progress mb-3" style="height: .5rem;">
+                    <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 10%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <!-- End Progress -->
+                @if (Model.UserMapCustomerModels != null)
+                {
+
+                    <table class="display nowrap table table-hover table-striped table-bordered dynamicTable">
+                        <thead>
+                            <tr>
+                                <th>Account Code</th>
+                                <th>Customer Name</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @for (var index = 0; index < Model.UserMapCustomerModels.Customers.Count; index++)
+                            {
+                                var item = Model.UserMapCustomerModels.Customers[index];
+                                string actionName;
+                                string textColor;
+
+                                if (Model.UserMapCustomerModels.UserMap[index].DeletedOn == null)
+                                {
+                                    actionName = "Delete";
+                                    textColor = "danger";
+                                }
+                                else
+                                {
+                                    actionName = "Reactivate";
+                                    textColor = "success";
+                                }
+                                <tr>
+                                    <td>@item.AccountCode</td>
+                                    <td>@item.Name</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("DeleteLink", "Admin", new {Model.UserMapCustomerModels.UserMap[index].UserMapID, actionName, Model.Name})" class="btn btn-xs btn-link text-@textColor">@actionName</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert alert-danger" role="alert">
+                        The user is not assigned to any customers
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- End Stats -->
+
+        <p class="small">* Modify the above items to activate and deactivate customers that have been associated with the user</p>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="@template/assets/vendor/bloodhound/typeahead.bundle.min.js"></script>
+    <script src="@template/assets/vendor/bloodhound/handlebars-v4.0.2.min.js"></script>
+    <script src="@template/assets/vendor/bloodhound/typeahead.helper.js"></script>
+
+    <script>
+        var path = '/Ajax/GetCustomerSearch?DBName=CRM&search=%QUERY';
+        var suggestion = '<div><label class="text-danger">{{accountCode}}</label> <label >{{name}}</label></div>';
+        var errorMsg = '<div class="empty-message">Unable to find any Customers that match the current query</div>';
+        var displayName = '{{accountCode}} - {{name}}';
+        var field = "#txtCustomer";
+        var hiddenField = '#SelectedID';
+        var selectedItemName = "name";
+        var selectedItemCustomerID = "customerID";
+
+
+        $(document).ready(function () {
+            InitTypeAhead(path,
+                suggestion,
+                errorMsg,
+                displayName,
+                field,
+                hiddenField,
+                selectedItemName,
+                selectedItemCustomerID);
+        });
+    </script>
+}

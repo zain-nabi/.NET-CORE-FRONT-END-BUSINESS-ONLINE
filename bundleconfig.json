@@ -1,0 +1,26 @@
+[
+  {
+    "outputFileName": "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.min.css",
+    "inputFiles": [
+      "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/moment.min.min.js",
+    "inputFiles": [
+      "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/moment.min.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.min.js",
+    "inputFiles": [
+      "wwwroot/front-dashboard-v1.1/dist/assets/vendor/daterangepicker/daterangepicker.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/front-dashboard-v1.1/src/assets/js/hs.daterangepicker.min.js",
+    "inputFiles": [
+      "wwwroot/front-dashboard-v1.1/src/assets/js/hs.daterangepicker.js"
+    ]
+  }
+]

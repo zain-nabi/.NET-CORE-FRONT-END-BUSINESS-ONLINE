@@ -1,0 +1,146 @@
+﻿@model Triton.Model.TritonGroup.ViewModel.UserViewModel
+@{
+    ViewData["Title"] = "New User";
+    ViewData["ActivePage"] = "New User";
+
+    ViewData["Header"] = "New User";
+    ViewData["Controller"] = "Account";
+    ViewData["Route"] = "Create";
+    ViewData["Page"] = "User";
+}
+
+<div class="container space-1">
+    <!-- Personal Info Form -->
+    <form id="form" method="post">
+        @if (!Html.ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger" asp-validation-summary="All" role="alert"></div>
+        }
+        <div class="row">
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="nameLabel" class="form-label">First name<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state form-group">
+                        <input asp-for="User.FirstName" type="text" class="form-control" placeholder="First name" aria-label="First name" data-parsley-pattern="/^[A-z ,.'-]+$/i" data-parsley-required="true" data-parsley-required-message="Please enter a valid first name" value="Helloworldtest" />
+                        @*<small class="form-text text-muted">Enter the customers first name</small>*@
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="usernameLabel" class="form-label">Surname<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state form-group">
+                        <input asp-for="User.LastName" type="text" class="form-control" placeholder="Surname" aria-label="Surname" data-parsley-pattern="/^[A-z ,.'-]+$/i" data-parsley-required="true" data-parsley-required-message="Please enter a valid surname" value="Helloworldtest" />
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+        </div>
+
+        <div class="row">
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="emailLabel" class="form-label">Email address<span class="text-danger">*</span></label>
+
+                    <div class="form-group">
+                        <input asp-for="User.Email" type="email" class="form-control" placeholder="Email address" aria-label="Email address" required data-parsley-type="email" data-parsley-required="true" data-parsley-required-message="Please enter a valid email address." value="test3@test.com" />
+                        <small class="form-text text-muted">We'll never share the users email with anyone else.</small>
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="locationLabel" class="form-label">Contact Number<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state form-group">
+                        <input asp-for="User.PhoneNumber" type="number" class="form-control" placeholder="Contact number" aria-label="Contact number" data-parsley-type="digits" data-parsley-required="true" data-parsle-minlength="10" data-parsley-required-message="Please enter the mobile number" maxlength="10" value="1234567890" />
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+        </div>
+
+        <div class="row">
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="organizationLabel" class="form-label">Password<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state form-group">
+                        <input asp-for="User.PasswordHash" type="password" class="form-control" placeholder="Password" aria-label="Password" data-parsley-required="true" data-parsley-required-message="Please enter a valid password" value="Triton!23" />
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="websiteLabel" class="form-label">Confirm Password<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state form-group">
+                        <input type="password" class="form-control" placeholder="Confirm Password" aria-label="Password" data-parsley-required="true" data-parsley-required-message="Please confirm the passwords are correct" value="Triton!23" />
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+        </div>
+
+        <div class="row">
+            <!-- Input -->
+            <div class="col-sm-6 mb-6">
+                <div class="js-form-message">
+                    <label id="organizationLabel" class="form-label">Role<span class="text-danger">*</span></label>
+
+                    <div class="js-focus-state">
+                        @Html.DropDownListFor(m => m.SelectedRoleId, new SelectList(Model.Role, "RoleID", "RoleName"), new { @class = "form-control custom-select" })
+                    </div>
+                </div>
+            </div>
+            <!-- End Input -->
+
+        </div>
+        <div class="w-lg-150">
+            <!-- Password Strength -->
+            <div class="mb-6">
+                <div class="d-flex justify-content-between mb-2">
+                    <h3 class="h6">Password strength:</h3>
+                    <span id="passwordStrengthVerdict"></span>
+                </div>
+
+                <div id="passwordStrengthProgress" class="mb-2"></div>
+
+                <p class="small">New password must be 8-20 characters long. Tip: Make it hard to guess (wrong: password123).</p>
+            </div>
+            <!-- End Password Strength -->
+            <!-- Buttons -->
+            <button type="submit" class="btn btn-sm btn-primary transition-3d-hover mr-1">Save Password</button>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-sm btn-soft-secondary transition-3d-hover">Cancel</a>
+            <!-- End Buttons -->
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <!-- JS Implementing Plugins -->
+    <script src="@ViewData["template"]/assets/vendor/pwstrength-bootstrap/dist/pwstrength-bootstrap.min.js"></script>
+    <!-- JS Front -->
+    <script src="@ViewData["template"]/assets/js/components/hs.password-strength.js"></script>
+    <script src="@ViewData["template"]/assets/js/components/hs.validation.js"></script>
+    <script>
+        $(document).on('ready', function () {
+            enableValidation("#form");
+
+            // initialization of password strength module
+            // $.HSCore.components.HSPasswordStrength.init('#newPassword');
+        });
+    </script>
+    @*<partial name="_ValidationScriptsPartial" />*@
+}

@@ -1,0 +1,38 @@
+﻿<div class="bg-light">
+    <div class="container space-1">
+        <div class="mb-3">
+            <h1 class="h3 text-primary font-weight-normal mb-0">@ViewData["Header"] <span class="font-weight-semi-bold"> @ViewData["HeaderBold"]</span></h1>
+            <p>
+                @ViewData["Description"]
+                @if (ViewData["WaybillActions"] != null)
+                {
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="h6 mb-0">&nbsp;</h4>
+                        <!-- Settings Dropdown -->
+                        <div class="position-relative">
+                            <button id="activitySettingsDropdownInvoker" class="btn btn-sm btn-soft-secondary transition-3d-hover" type="button" aria-controls="activitySettingsDropdown" aria-haspopup="true" aria-expanded="false" data-unfold-event="click" data-unfold-target="#activitySettingsDropdown" data-unfold-type="css-animation" data-unfold-duration="300" data-unfold-delay="300" data-unfold-hide-on-scroll="true" data-unfold-animation-in="slideInUp" data-unfold-animation-out="fadeOut">
+                                Actions <span class="fas fa-chevron-down text-right"></span>
+                            </button>
+
+                            <div id="activitySettingsDropdown" class="dropdown-menu dropdown-unfold dropdown-menu-right u-unfold--css-animation u-unfold--hidden" aria-labelledby="activitySettingsDropdownInvoker" style="min-width: 190px; animation-duration: 300ms; right: 0px;">
+                                <a class="dropdown-item" href='#QueryModal' data-modal-target='#QueryModal'>
+                                    <small class="fas fa-question-circle dropdown-item-icon"></small>
+                                    Query this waybill
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("SaveQuery", "Waybill", new { waybillId = Model.Waybills.WaybillID, query = "Added to watch list", queryStatusLcid = 252 })">
+                                    <small class="fas fa-eye dropdown-item-icon"></small>
+                                    Add to watch list
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("DeleteWaybillQuery", "Waybill", new { waybillId = ViewData["waybillId"] })">
+                                    <small class="fas fa-trash dropdown-item-icon"></small>
+                                    Remove from watch list
+                                </a>
+                            </div>
+                        </div>
+                        <!-- End Settings Dropdown -->
+                    </div>
+                }
+            </p>
+        </div>
+    </div>
+</div>

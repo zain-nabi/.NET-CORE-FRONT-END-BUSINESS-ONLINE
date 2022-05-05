@@ -1,0 +1,295 @@
+﻿@model Triton.Model.CRM.Custom.SiteCodeModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- ========== MAIN ========== -->
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Site Code</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">New Site Code</h1>
+                </div>
+            </div>
+        </div>
+        <!-- End Page Header -->
+    </div>
+    <!-- End Breadcrumb Section -->
+    <!-- Content Section -->
+    <div class="content container-fluid my-n9">
+        <form class="js-validate" method="post" asp-action="Create" asp-controller="SiteCode">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">New Site Code</p>
+                </div>
+                <div class="card-body">
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Account Code</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <select class="js-select2-custom custom-select" size="1" style="opacity: 0;" asp-for="CustomerID" asp-items="@(new SelectList(Model.Customers, "CustomerID", "CustomerName"))" required
+                                    data-msg="Please select a customer."
+                                    data-hs-select2-options='{
+                                                "minimumResultsForSearch": "Infinity",
+                                                "placeholder": "Select Customer"
+                                                }'>
+                                <option label="empty"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Site Code</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="sitecodeTextBox" type="text" class="form-control" required
+                                   data-msg="Please enter a site code value." placeholder="Site code" aria-label="Current Value" asp-for="SiteName" maxlength="10">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Site Name</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="sitenameTextBox" type="text" class="form-control" required
+                                   data-msg="Please enter a customer value." placeholder="Customer name" aria-label="Current Value" maxlength="20" asp-for="SiteCustomerName">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Address 1</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="address1TextBox" type="text" class="form-control" required
+                                   data-msg="Please fill in Address 1." placeholder="Address 1" aria-label="Current Value" asp-for="Address1">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Address 2</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="address2TextBox" type="text" class="form-control" required
+                                   data-msg="Please fill in Address 2." placeholder="Address 2" aria-label="Current Value" asp-for="Address2">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Address 3 <span class="input-label-secondary">(Optional)</span></label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="address3TextBox" type="text" class="form-control" placeholder="Address 3" aria-label="Current Value" asp-for="Address3">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Suburb</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="suburbTextBox" type="text" class="form-control" required
+                                   data-msg="Please fill in a suburb." placeholder="Suburb" aria-label="Current Value" asp-for="Address4" readonly style="background: #F6F7FA">
+                        </div>
+                        <div class="col-sm-3">
+                            <a class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#exampleModalCenteredScrollable">
+                                <i class="fas fa-map-pin mr-1"></i> Find Suburb
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Postal Code</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="postalTextBox" type="text" class="form-control" required autocomplete="on"
+                                   data-msg="Please enter a postal code." placeholder="Postal Code" aria-label="Current Value" asp-for="PostalCode" readonly style="background: #F6F7FA">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Tel No.</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="telTextBox" type="text" class="form-control" required
+                                   data-msg="Please enter a telephone number." placeholder="Tel No." maxlength="10" aria-label="Current Value" asp-for="TelNo" data-rule-digits="true">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <!-- Input -->
+                    <div class="row form-group">
+                        <label class="col-sm-3 col-form-label input-label">Contact</label>
+                        <div class="col-sm-4 js-form-message mb-3">
+                            <input id="contcatTextBox" type="text" class="form-control" required
+                                   data-msg="Please enter a contact person." placeholder="Contact" aria-label="Current Value" asp-for="Contact">
+                        </div>
+                    </div>
+                    <!-- End Input -->
+                    <div class="w-100"></div>
+                    <!-- End Form -->
+                </div>
+                <!-- Footer -->
+                <div class="card-footer d-flex justify-content-end">
+                    <a class="btn btn-white" href="@Url.Action("Index", "Quotation")">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-primary ml-2" id="btnSave" />
+                </div>
+                <!-- End Footer -->
+            </div>
+        </form>
+    </div>
+    <!-- End Content Section -->
+    <!-- Modal -->
+    <div id="exampleModalCenteredScrollable" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" id="modalForm">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col"><h5 class="modal-title" id="exampleModalCenteredScrollableTitle">Search for a postal code to continue</h5></div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+                                    <i class="tio-clear tio-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                        <form class="js-validate" id="suburbPostalForm">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="col-form-label input-label">Suburb</label>
+                                </div>
+                                <div class="col-sm-8 js-form-message">
+                                    <input id="suburbModalTextBox" type="text" class="form-control" required data-msg="Please enter a suburb." placeholder="Suburb" aria-label="Current Value">
+                                </div>
+                                <div class="col-sm-2 pl-7">
+                                    <button type="button" class="btn btn-primary" id="btnPostalCodeSearch">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-body" id="PostalCodeModalBody">
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-header-title">Suburbs</h4>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th></th>
+                                        <th  class="align-middle">Name</th>
+                                        <th  class="align-middle">Suburb</th>
+                                        <th  class="align-middle">Code</th>
+                                        <th  class="align-middle">Branch</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="PostalCodeTblBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- End Table -->
+                    </div>
+                    <!-- End Card -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+</main>
+<!-- ========== END MAIN ========== -->
+
+@section Scripts{
+    <script>
+        $('#btnPostalCodeSearch').on('click', function (event) {
+            if ($("#suburbPostalForm").valid()) {
+                $("#PostalCodeTblBody").html("");
+                $.ajax({
+                    url: "GetPostalCodeSuburb/",
+                    type: 'GET',
+                    data: { suburb: $("#suburbModalTextBox").val() },
+                    dataType: 'json',
+                    success: function (PostalCodesList) {
+                        for (i = 0; i < PostalCodesList.postalCodesList.length; i++) {                            
+                            var x =
+                                '<tr>' +
+                                '<td class="align-middle">' +
+                                '<div class="custom-control custom-radio">' +
+                                '<input type="radio" id="' + PostalCodesList.postalCodesList[i].postalCodeID + '" class="custom-control-input" name="postalCodeRadio" value="' + PostalCodesList.postalCodesList[i].name + '" onclick="GetPostalCode(' + JSON.stringify(PostalCodesList.postalCodesList[i].name).replace(/"/g, '&quot;') + ',' + PostalCodesList.postalCodesList[i].postalCode + ');">' +
+                                '<label class="custom-control-label" for="' + PostalCodesList.postalCodesList[i].postalCodeID + '"></label>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td>' +
+                                '<a class="d-flex align-items-center">' +
+                                '<div>' +
+                                '<span class="d-block h5 text-hover-primary mb-0">' + PostalCodesList.postalCodesList[i].name + '</span>' +
+                                '</div>' +
+                                '</a>' +
+                                '</td>' +
+                                '<td class="align-middle">' +
+                                '<a class="d-flex align-items-center">' +
+                                '<div>' +
+                                '<span class="d-block h5 text-hover-primary mb-0">' + PostalCodesList.postalCodesList[i].suburb + '</span>' +
+                                '</div>' +
+                                '</a>' +
+                                '</td>' +
+                                '<td class="align-middle">' +
+                                '<a class="d-flex align-items-center">' +
+                                '<div>' +
+                                '<span class="d-block h5 text-hover-primary mb-0">' + PostalCodesList.postalCodesList[i].postalCode + '</span>' +
+                                '</div>' +
+                                '</a>' +
+                                '</td>' +
+                                '<td class="align-middle">' +
+                                '<a class="d-flex align-items-center">' +
+                                '<div>' +
+                                '<span class="d-block h5 text-hover-primary mb-0">' + PostalCodesList.postalCodesList[i].branchCode + '</span>' +
+                                '</div>' +
+                                '</a>' +
+                                '</td>' +
+                                '</tr>'
+                            $("#PostalCodeTblBody").append(x);
+                        }
+                    }
+                });
+                event.preventDefault();
+                event.returnValue = false;
+            }
+        });
+    </script>
+    <script>
+        function GetPostalCode(name, postalCode) {
+            $("#suburbTextBox").val(name.toString());
+            $("#postalTextBox").val(postalCode.toString());
+            $("#exampleModalCenteredScrollable").modal("hide");
+            var element = document.getElementById("suburbModalTextBox");
+            element.classList.remove("is-valid");
+            element.classList.remove("is-invalid");
+        }
+    </script>
+    <script>
+        $(".modal").on("hidden.bs.modal", function () {
+            $("#PostalCodeTblBody").html("");
+            $("#suburbModalTextBox").val('');
+            var element = document.getElementById("suburbModalTextBox");
+            element.classList.remove("is-valid");
+            element.classList.remove("is-invalid");
+        });
+    </script>
+} 

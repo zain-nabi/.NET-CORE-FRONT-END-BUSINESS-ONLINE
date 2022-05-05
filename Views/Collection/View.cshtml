@@ -1,0 +1,464 @@
+﻿@using Microsoft.Extensions.Configuration
+@using System.Globalization
+@model Triton.Model.CRM.Custom.CollectionRequestsModel
+
+@inject IConfiguration Configuration
+@{
+    var textInfo = new CultureInfo("en-US", false).TextInfo;
+}
+@{
+
+    //var statusColor = Model.proc_CollectionRequests.FWeventCodeID >= 40 ? "success" : "danger";
+
+    var iCount = 0;
+    var statusColor = "";
+    ViewData["Title"] = "View Collection - " + Model.CollectionRequests.CollectionrequestNumber;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions {
+
+    private void RenderDeliveryInformation(string address, string text, string icon)
+    {
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mr-2">
+                <span class="btn btn-icon btn-soft-primary rounded-circle">
+                    <span class="btn-icon__inner"><i class="@icon"></i></span>
+                </span>
+                <div class="ml-3">
+                    <h5 class="text-hover-primary mb-0">@(address == null || address.Trim() == "" ? "N/A" : address)</h5>
+                    <span class="font-size-sm text-body">@text</span>
+                </div>
+            </div>
+        </div>
+    }
+    private void RenderBlock(string label, string value, string icon, string color)
+    {
+        <div class="card card-frame transition-3d-hover mb-3">
+            <!-- Card -->
+            <div class="card-body">
+                <div class="media">
+                    <span class="btn btn-lg btn-icon btn-soft-@color rounded-circle mr-4">
+                        <span class="fas @icon btn-icon__inner"></span>
+                    </span>
+                    <div class="media-body px-4">
+                        <h4 class="h6 text-dark mb-1">@value</h4>
+                        <small class="d-block text-muted">@label</small>
+                    </div>
+                </div>
+            </div>
+            <!-- End Card -->
+        </div>
+    }
+
+    private void RenderDocuments(string label, string href, string id)
+    {
+        <li class="list-group-item py-3">
+            <div class="media">
+                <div class="mt-1 mr-3">
+                    <div class="media align-items-center">
+                        <div class="avatar avatar-sm avatar-soft-secondary avatar-circle mr-2">
+                            <span class="avatar-initials">@label.Substring(0, 1)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">@label</h5>
+                            <span class="d-block font-size-sm">Waybill</span>
+                        </div>
+
+                        <div class="col-auto">
+                            <a class="btn btn-sm btn-soft-primary" href="@href" title="Launch importer" target="_blank">
+                                View <i class="tio-open-in-new ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+            </div>
+        </li>
+    }
+
+    private void RenderLabel(string label, string value, string icon)
+    {
+        <div class="d-flex align-items-start mb-4">
+            <span class="btn btn-icon btn-soft-danger rounded-circle">
+                <span class="btn-icon__inner"><i class="fad @icon"></i></span>
+            </span>
+
+            <div class="ml-3">
+                <span class="d-block text-dark">@label</span>
+                <small class="d-block text-secondary">@value</small>
+            </div>
+        </div>
+    }
+
+    private void DisableDocuments(string label)
+    {
+        <li class="list-group-item py-3">
+            <div class="media">
+                <div class="mt-1 mr-3">
+                    <div class="media align-items-center">
+                        <div class="avatar avatar-sm avatar-soft-secondary avatar-circle mr-2">
+                            <span class="avatar-initials">@label.Substring(0, 1)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="media-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">@label</h5>
+                            <span class="d-block font-size-sm">Waybill</span>
+                        </div>
+
+                        <div class="col-auto text-danger">
+                            <span class="badge badge-soft-danger p-1">
+                                <i class="fal fa-upload"></i> Awaiting upload
+                            </span>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+            </div>
+        </li>
+
+    }
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <div class="row justify-content-lg-center">
+            <div class="col-lg-10">
+                <!-- Profile Cover -->
+                <div class="profile-cover">
+                    <div class="profile-cover-img-wrapper">
+                        <img class="profile-cover-img" src="~/front-dashboard-v1.1/dist/assets/img/1920x400/img2.jpg" alt="Image Description">
+                    </div>
+                </div>
+                <!-- End Profile Cover -->
+                <!-- Profile Header -->
+                <div class="text-center mb-5">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-xxl avatar-circle avatar-border-lg profile-cover-avatar">
+                        <img class="avatar-img" src="~/front-dashboard-v1.1/dist/assets/img/160x160/waybill.jpg" alt="Image Description">
+                        @{
+                            var statusColorCode = (from x in Model.CollectionRequestTrackandTracesModel select x.FwEventCodes.FWEventCodeID).Last();
+
+                            statusColor = statusColorCode >= 40 ? "success" : "danger";
+                        }
+                        <span class="avatar-status avatar-status-@statusColor"></span>
+                    </div>
+                    <!-- End Avatar -->
+
+                    <h1 class="page-header-title">@Model.CollectionRequests.CollectionrequestNumber</h1>
+                    <!-- List -->
+                    <ul class="list-inline list-inline-m-1">
+                        <li class="list-inline-item">
+                            <i class="far fa-user-clock"></i>
+                            <span>@Model.CollectionRequests.DateCollReq.ToString("dd MMMM yyyy hh:mm")</span>
+                        </li>
+
+                        <li class="list-inline-item">
+                            <i class="far fa-user-alt"></i>
+                            <span>@Model.CollectionRequests.CallerName</span>
+                        </li>
+
+                        <li class="list-inline-item">
+                            <i class="legend-indicator bg-@statusColor mr-1"></i>
+                            <span class="text-primary">@(statusColor == "danger" ? "CANCELLED" : "COLLECTED")</span>
+                        </li>
+
+
+                    </ul>
+                    <!-- End List -->
+                </div>
+
+                @if (ViewData["Message"] != null)
+                {
+                    <div>
+                        @Html.Raw(ViewData["Message"])
+                    </div>
+                }
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="nav-one-eg1" role="tabpanel" aria-labelledby="nav-one-eg1-tab">
+                        <div class="row">&nbsp;</div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div id="accountSidebarNav"></div>
+
+                                <div class="js-sticky-block card mb-3 mb-lg-5" data-hs-sticky-block-options="{
+                                        &quot;parentSelector&quot;: &quot;#accountSidebarNav&quot;,
+                                        &quot;breakpoint&quot;: &quot;lg&quot;,
+                                        &quot;startPoint&quot;: &quot;#accountSidebarNav&quot;,
+                                        &quot;endPoint&quot;: &quot;#stickyBlockEndPoint&quot;,
+                                        &quot;stickyOffsetTop&quot;: 20
+                                        }">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Contact Information</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body">
+                                        <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                                            <tr class="text-dark mb-3">
+                                                <td><i class="tio-user nav-icon"></i>&nbsp; Name</td>
+                                                <td class="table-column-right-aligned">@(Model.CollectionRequests.CallerName ?? "N/A")</td>
+                                            </tr>
+                                            <tr class="text-dark mb-3">
+                                                <td><i class="tio-android-phone-vs nav-icon"></i>&nbsp;Contact Number</td>
+                                                <td class="table-column-right-aligned">@(Model.CollectionRequests.CallerContactInfo ?? "N/A")</td>
+                                            </tr>
+                                            <tr class="text-dark mb-3">
+                                                <td><i class="tio-user nav-icon"></i>&nbsp;Contact Relationship</td>
+                                                <td class="table-column-right-aligned">@(Model.CollectionRequests.CallerRelationship ?? "N/A")</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!-- End Body -->
+                                </div>
+
+                                <div class="js-sticky-block card mb-3 mb-lg-5" data-hs-sticky-block-options="{
+                                        &quot;parentSelector&quot;: &quot;#accountSidebarNav&quot;,
+                                        &quot;breakpoint&quot;: &quot;lg&quot;,
+                                        &quot;startPoint&quot;: &quot;#accountSidebarNav&quot;,
+                                        &quot;endPoint&quot;: &quot;#stickyBlockEndPoint&quot;,
+                                        &quot;stickyOffsetTop&quot;: 20
+                                        }">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Collection Information</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body">
+                                        <ul class="list-unstyled list-unstyled-py-3 text-dark mb-3">
+                                            <li class="py-0">
+                                                <small class="card-subtitle">About</small>
+                                            </li>
+
+                                            <li>
+                                                <i class="fal fa-clipboard-list nav-icon"></i>
+                                                Collection number
+                                                <span class="float-right">&nbsp;@Model.CollectionRequests.CollectionrequestNumber</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-calendar-alt nav-icon"></i>
+                                                Collection date
+                                                <span class="float-right">&nbsp;@Model.CollectionRequests.DateCollReq.ToString("dd MMMM yyyy")</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-boxes-alt nav-icon"></i>
+                                                Quantity
+                                                <span class="float-right">&nbsp;@Model.CollectionRequests.EstQty</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-balance-scale nav-icon"></i>
+                                                Mass
+                                                <span class="float-right">&nbsp;@Model.CollectionRequests.EstMass</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-weight-hanging nav-icon"></i>
+                                                Total Volume
+                                                <span class="float-right">&nbsp;@Model.CollectionRequests.EstVolume</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-users-cog nav-icon"></i>
+                                                Reference
+                                                <span class="float-right">&nbsp;@(Model.CollectionRequests.CustomerXref == "" ? "N/A" : Model.CollectionRequests.CustomerXref)</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-clock nav-icon"></i>
+                                                Collect Before
+                                                <span class="float-right">&nbsp;@(Model.CollectionRequests.TimeCollBefore == null ? "N/A" : Model.CollectionRequests.TimeCollBefore.Insert(2, ":"))</span>
+                                            </li>
+                                            <li>
+                                                <i class="fal fa-clock nav-icon"></i>
+                                                Collect After
+                                                <span class="float-right">&nbsp;@(Model.CollectionRequests.TimeCollAfter == null ? "N/A" : Model.CollectionRequests.TimeCollAfter.Insert(2, ":"))</span>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-user-shield nav-icon"></i>
+                                                Collect from security
+                                                <span class="float-right">&nbsp;@(Model.CollectionRequests.CollFromSecurity ? "Yes" : "No")</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- End Body -->
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <!-- Card -->
+                                <div class="card mb-3 mb-lg-5">
+                                    <!-- Header -->
+                                    <div class="card-header">
+                                        <h5 class="card-header-title">Tracking</h5>
+                                    </div>
+                                    <!-- End Header -->
+                                    <!-- Body -->
+                                    <div class="card-body card-body-height">
+                                        <!-- Step -->
+                                        <ul class="step step-icon-xs">
+                                            @foreach (var item in Model.CollectionRequestTrackandTracesModel)
+                                            {
+                                                if (iCount < 6)
+                                                {
+                                                    <!-- Step Item -->
+                                                    <li class="step-item">
+                                                        <div class="step-content-wrapper">
+                                                            <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                            <div class="step-content">
+                                                                <h5 class="mb-1">
+                                                                    <span class="text-dark">@textInfo.ToTitleCase(item.FwEventCodes.ShortDesc.ToLower())</span>
+                                                                </h5>
+
+                                                                <p class="font-size-sm mb-1"><span class="text-uppercase text-primary"><i class="tio-poi"></i> </span>@item.CollectionRequestTrackAndTraces.FWEventLocation</p>
+
+                                                                <small class="text-muted text-uppercase">@item.CollectionRequestTrackAndTraces.EventDateTimeStamp.ToString("hh:mm:tt") @item.CollectionRequestTrackAndTraces.EventDateTimeStamp.ToString("dd MMMM yyyy")</small>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <!-- End Step Item -->
+
+                                                }
+                                                else
+                                                {
+                                                    <!-- Step Item -->
+                                                    <li id="collapseActivitySection" class="step-item collapse">
+                                                        <div class="step-content-wrapper">
+                                                            <span class="step-icon step-icon-pseudo step-icon-soft-dark"></span>
+
+                                                            <div class="step-content">
+                                                                <h5 class="mb-1">
+                                                                    <span class="text-dark" href="#">@textInfo.ToTitleCase(item.FwEventCodes.ShortDesc.ToLower())</span>
+                                                                </h5>
+
+                                                                <p class="font-size-sm mb-1">@item.CollectionRequestTrackAndTraces.FWEventLocation @*<span class="text-uppercase text-primary"><i class="tio-folder-bookmarked"></i> @item.NoteDetail</span>*@</p>
+
+                                                                <small class="text-muted text-uppercase">@item.CollectionRequestTrackAndTraces.EventDateTimeStamp.ToString("hh:mm:tt") @item.CollectionRequestTrackAndTraces.EventDateTimeStamp.ToString("dd MMMM yyyy")</small>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <!-- End Step Item -->
+                                                }
+
+
+
+                                                iCount++;
+                                            }
+                                        </ul>
+                                        <!-- End Step -->
+                                    </div>
+                                    <!-- End Body -->
+                                    <!-- Footer -->
+                                    <!--<div class="card-footer">
+                                        <a class="btn btn-sm btn-ghost-secondary" data-toggle="collapse" href="#collapseActivitySection" role="button" aria-expanded="false" aria-controls="collapseActivitySection">
+                                            <span class="btn-toggle-default">
+                                                <i class="tio-chevron-down mr-1"></i> View more
+                                            </span>
+                                            <span class="btn-toggle-toggled">
+                                                <i class="tio-chevron-up mr-1"></i> View less
+                                            </span>
+                                        </a>
+                                    </div>-->
+                                    <!-- End Footer -->
+                                </div>
+                                <!-- End Card -->
+
+                                <div class="row">
+                                    <div class="col-sm-6 mb-3 mb-lg-5">
+                                        <!-- Card -->
+                                        <div class="card h-100">
+                                            <!-- Header -->
+                                            <div class="card-header">
+                                                <h5 class="card-header-title">Sender Information</h5>
+                                            </div>
+                                            <!-- End Header -->
+                                            <!-- Body -->
+                                            <div class="card-body">
+                                                <ul class="list-unstyled list-unstyled-py-4 mb-0">
+                                                    <!-- List Item -->
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendName ?? "N/A", "Name", "fal fa-warehouse");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendAdd1 ?? "N/A", "Address 1", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendAdd2 ?? "N/A", "Address 2", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendAdd3 ?? "N/A", "Address 3", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendAdd4 ?? "N/A", "Address 4", "fal fa-map-marker-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.SendAddPostalCode ?? "N/A", "Postal Code", "fal fa-map-marker-alt");}</li>
+                                                </ul>
+                                            </div>
+                                            <!-- End Body -->
+                                            <!-- Footer -->
+                                            @*<a class="card-footer text-center" href="user-profile-connections.html">
+                                                    View all connections <i class="tio-chevron-right"></i>
+                                                </a>*@
+                                            <!-- End Footer -->
+                                        </div>
+                                        <!-- End Card -->
+                                    </div>
+
+                                    <div class="col-sm-6 mb-3 mb-lg-5">
+                                        <!-- Card -->
+                                        <div class="card h-100">
+                                            <!-- Header -->
+                                            <div class="card-header">
+                                                <h5 class="card-header-title">Receiver Information</h5>
+                                            </div>
+                                            <!-- End Header -->
+                                            <!-- Body -->
+                                            <div class="card-body">
+                                                <ul class="list-unstyled list-unstyled-py-4 mb-0">
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecName ?? "N/A", "Name", "fal fa-warehouse-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecAdd1 ?? "N/A", "Address 1", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecAdd2 ?? "N/A", "Address 2", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecName ?? "N/A", "Address 3", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecAdd4 ?? "N/A", "Address 4", "fal fa-map-marked-alt");}</li>
+                                                    <li>@{RenderDeliveryInformation(Model.CollectionRequests.RecAddPostalCode ?? "N/A", "Postal Code", "fal fa-map-marker-alt");}</li>
+                                                </ul>
+                                            </div>
+                                            <!-- End Body -->
+                                            <!-- Footer -->
+                                            @*<a class="card-footer text-center" href="user-profile-teams.html">
+                                                    View all teams <i class="tio-chevron-right"></i>
+                                                </a>*@
+                                            <!-- End Footer -->
+                                        </div>
+                                        <!-- End Card -->
+                                    </div>
+                                </div>
+                                <!-- End Row -->
+                            </div>
+                        </div>
+                        <!-- End Row -->
+                    </div>
+
+                    @*<div class="tab-pane fade" id="nav-three-eg1" role="tabpanel" aria-labelledby="nav-three-eg1-tab">
+                            <p>Third tab content...</p>
+                        </div>*@
+                </div>
+                <!-- End Tab Content -->
+
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+
+@section scripts{
+    <script>
+        $(document).on('ready', function () {
+            // INITIALIZATION OF FORM VALIDATION
+            // =======================================================
+            $('.js-validate').each(function () {
+                $.HSCore.components.HSValidation.init($(this));
+            });
+        });
+    </script>
+}

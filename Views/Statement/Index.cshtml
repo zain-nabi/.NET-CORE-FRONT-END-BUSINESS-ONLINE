@@ -1,0 +1,453 @@
+﻿@model Vendor.Services.CustomModels.VendorStatementSearch
+@{
+    ViewData["Title"] = "Search Statement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //ViewData["Description"] = "Find a quote to view or duplicate";
+}
+@functions {
+    private void RenderLabel(string label, string value, string icon)
+    {
+        <div class="d-flex align-items-start mb-5">
+            <span class="btn btn-icon btn-soft-danger rounded-circle">
+                <span class="btn-icon__inner"><i class="fad @icon"></i></span>
+            </span>
+
+            <div class="ml-3">
+                <span class="d-block text-dark">@label</span>
+                <small class="d-block text-secondary">@value</small>
+            </div>
+        </div>
+    }
+    private void RenderDocuments(string Name, string icon)
+    {
+        <a class="d-flex align-items-start mb-4" href=@Url.Action("PrintStatement", "Statement", new { Model.Customers.AccountCode, Model.Period }) target="_blank">
+            <span class="btn btn-icon btn-soft-danger rounded-circle">
+                <span class="btn-icon__inner"><i class="fad @icon"></i></span>
+            </span>
+
+            <div class="ml-3">
+                <span class="d-block text-dark">@Name</span>
+
+            </div>
+        </a>
+
+    }
+}
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Statement</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">E-Statement</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Statement</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <form method="post">
+            <div class="row mb-5">
+                <div class="col-md-auto mb-5">
+                    <div class="js-focus-state">
+                        <label>Account</label>
+                        <div class="input-group">
+                            <select asp-for="customerId" asp-items="@(new SelectList(Model.AllowedCustomers, "CustomerID", "CustomerName"))" class="custom-select" id="ddlCustomers"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto mb-5">
+                    <label>Period</label>
+                    <div id="datepickerWrapperFrom" class="u-datepicker input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <span class="fas fa-calendar"></span>
+                            </span>
+                            @Html.TextBoxFor(m => m.FilterDate, new { id = "js-daterangepicker-predefined", @class = "form-control", required = "required", Name = "birthday", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-auto mb-5">
+                    <div class="js-focus-state">
+                        <div class="input-group" style="padding-top:30px;">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*@if (Model.GetStatementResponseStatementOutput != null)
+            {*@
+        @if (Model.ShowReport == false)
+        {
+            <partial name="_RenderSearchScreenCard" view-data='@new ViewDataDictionary(ViewData) { { "TitleText", "Report" },{ "TitleSubText", "Report information will be shown here" } }' />
+        }
+        else
+        {
+            <div class="card mb-3 mb-lg-5">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">Overview <i class="tio-verified text-primary"></i></h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg">
+                            <!-- Stats -->
+                            <div class="media align-items-center">
+                                @*<i class="tio-user-big-outlined tio-xl text-primary mr-3"></i>*@
+                                <i class="far fa-calendar-day text-primary mr-3 fa-2x"></i>
+
+                                <div class="media-body">
+                                    <span class="d-block font-size-sm">Current</span>
+                                    <div class="d-flex align-items-center">
+                                        <h3 class="mb-0">@Model.GetStatementResponseStatementOutput.StatementHeader.BalanceCurr.ToString("C")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Stats -->
+
+                            <div class="d-lg-none">
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg column-divider-lg">
+                            <!-- Stats -->
+                            <div class="media align-items-center">
+                                <i class="far fa-calendar-day text-primary mr-3 fa-2x"></i>
+
+                                <div class="media-body">
+                                    <span class="d-block font-size-sm">30 Days</span>
+                                    <div class="d-flex align-items-center">
+                                        <h3 class="mb-0">@Model.GetStatementResponseStatementOutput.StatementHeader.Balance030.ToString("C")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Stats -->
+
+                            <div class="d-lg-none">
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg column-divider-lg">
+                            <!-- Stats -->
+                            <div class="media align-items-center">
+                                <i class="far fa-calendar-day text-primary mr-3 fa-2x"></i>
+
+                                <div class="media-body">
+                                    <span class="d-block font-size-sm">60 Days</span>
+                                    <div class="d-flex align-items-center">
+                                        <h3 class="mb-0">@Model.GetStatementResponseStatementOutput.StatementHeader.Balance060.ToString("C")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Stats -->
+
+                            <div class="d-sm-none">
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg column-divider-lg">
+                            <!-- Stats -->
+                            <div class="media align-items-center">
+                                <i class="far fa-calendar-day text-primary mr-3 fa-2x"></i>
+
+                                <div class="media-body">
+                                    <span class="d-block font-size-sm">90 Days</span>
+                                    <div class="d-flex align-items-center">
+                                        <h3 class="mb-0">@Model.GetStatementResponseStatementOutput.StatementHeader.Balance090.ToString("C")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Stats -->
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+                <!-- End Body -->
+                <!-- Vector Map -->
+                <!-- End Vector Map -->
+            </div>
+
+            <div class="row gx-2 gx-lg-3">
+                <div class="col-lg-5 mb-3 mb-lg-5">
+                    <!-- Card -->
+                    <div class="card h-100">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <h5 class="card-header-title">Account Details</h5>
+                        </div>
+                        <!-- End Header -->
+                        <!-- Body -->
+                        <div class="card-footer border-0 pt-0">
+                            <div class="list-group list-group-flush list-group-no-gutters">
+                                <!-- List Item -->
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <small class="card-subtitle">Customer name:</small>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="badge badge-soft-primary p-2">@Model.GetStatementResponseStatementOutput.StatementHeader.CustName</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <small class="card-subtitle">Customer code:</small>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="p-2"><small>@Model.GetStatementResponseStatementOutput.StatementHeader.CustCode</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <small class="card-subtitle">Balance:</small>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="p-2"><small>@Model.GetStatementResponseStatementOutput.StatementHeader.BalanceBf.ToString("C")</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <small class="card-subtitle">Statement date:</small>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="p-2">
+                                                <small>
+                                                    @{
+                                                        var fwDate = Model.GetStatementResponseStatementOutput.StatementHeader.StatementDate.ToString();
+                                                        var statementDate = new DateTime(Convert.ToInt32(fwDate.Substring(0, 4)), Convert.ToInt32(fwDate.Substring(4, 2)), 1);
+                                                    }
+                                                    @statementDate.ToString("dd MMMM yyyy")
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <small class="card-subtitle">View document</small>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <div class="p-2">
+                                                <small>
+                                                    <a class="btn btn-sm btn-white" href=@Url.Action("PrintStatement", "Statement", new { Model.Customers.AccountCode, Model.Period }) target="_blank">
+                                                        <i class="tio-receipt-outlined mr-1"></i> View
+                                                    </a>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Card -->
+                </div>
+
+                <div class="col-lg-7 mb-3 mb-lg-5">
+                    <div class="card">
+                        <!-- Header -->
+                        <div class="card-header">
+                            <div class="row justify-content-between align-items-center flex-grow-1">
+                                <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                                    <form>
+                                        <!-- Search -->
+                                        <div class="input-group input-group-merge input-group-flush">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="tio-search"></i>
+                                                </div>
+                                            </div>
+                                            <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                                        </div>
+                                        <!-- End Search -->
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- End Row -->
+                        </div>
+                        <!-- End Header -->
+                        <!-- Table -->
+                        <div class="table-responsive datatable-custom">
+                            <div id="datatable_wrapper" class="dataTables_wrapper">
+                                <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                                       data-hs-datatables-options='{
+                     "order": [],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Reference</th>
+                                            <th>Date</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-size-1">
+                                        @foreach (var item in Model.GetStatementResponseStatementOutput.Rows)
+                                        {
+                                            <tr class="">
+                                                <td>
+                                                    <a class="d-flex align-items-center">
+                                                        <div class="avatar avatar-soft-primary avatar-circle">
+                                                            <span class="avatar-initials">@item.TransNo.Substring(0, 1)</span>
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <span class="d-block h5 text-hover-primary mb-0">@item.TransNo</span>
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td class="align-middle text-secondary font-weight-normal">
+                                                    @{
+
+                                                        var date = DateTime.ParseExact(item.TransDate.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture).ToString("dd MMMM yyyy");
+                                                    }
+                                                    @date
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="media align-items-center">
+                                                        @item.DebitAmount.ToString("C")
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <div class="media align-items-center">
+                                                        @item.CreditAmount.ToString("C")
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Table -->
+                        <!-- Footer -->
+                        <div class="card-footer">
+                            <!-- Pagination -->
+                            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                                <div class="col-sm mb-2 mb-sm-0">
+                                    <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                                        <span class="mr-2">Showing:</span>
+
+                                        <!-- Select -->
+                                        <select id="datatableEntries" class="js-select2-custom"
+                                                data-hs-select2-options='{
+                            "minimumResultsForSearch": "Infinity",
+                            "customClass": "custom-select custom-select-sm custom-select-borderless",
+                            "dropdownAutoWidth": true,
+                            "width": true
+                          }'>
+                                            <option value="4">4</option>
+                                            <option value="6">6</option>
+                                            <option value="8" selected>8</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                        <!-- End Select -->
+
+                                        <span class="text-secondary mr-2">of</span>
+
+                                        <!-- Pagination Quantity -->
+                                        <span id="datatableWithPaginationInfoTotalQty"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-auto">
+                                    <div class="d-flex justify-content-center justify-content-sm-end">
+                                        <!-- Pagination -->
+                                        <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Pagination -->
+                        </div>
+                        <!-- End Footer -->
+
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</main>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $.HSCore.components.HSRangeDatepicker.init('.js-range-datepicker');
+            $('.flatpickr').flatpickr({
+            });
+        });
+
+        $(function () {
+            $('#js-daterangepicker-predefined').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            });
+        });
+
+    </script>
+    <style>
+        .range_inputs {
+            font-size: 0px;
+        }
+
+            .range_inputs * {
+                display: none;
+            }
+
+        .ranges li:last-child {
+            visibility: hidden;
+            position: relative;
+        }
+
+            .ranges li:last-child:after {
+                visibility: visible;
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding-left: 23px;
+                content: "Custom Date";
+            }
+    </style>
+}

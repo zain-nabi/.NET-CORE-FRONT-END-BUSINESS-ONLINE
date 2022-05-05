@@ -1,0 +1,178 @@
+﻿@model Triton.BusinessOnline.Models.UserDetailsModel
+@{
+    ViewBag.Title = "User Details";
+
+
+    ViewBag.HeaderIcon = Html.Raw("<i class='fa fa-user fa-stack-1x fa-inverse' style='color:#FFFFFF'></i>");
+    // ViewBag.HeaderTitle = string.Format("{0} {1}", Model.UserDetails.Users.FirstName, Model.UserDetails.Users.LastName); ;
+    ViewBag.HeaderDescription = "User Information";
+
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="innerLR">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="widget">
+                <div class="widget-body padding-none">
+                    <div class="widget-head height-auto">
+                        <div class="media">
+                            <div class="pull-left innerAll half">
+                                <i class="fa fa-user fa-3x"></i>
+                            </div>
+                            <div class="media-body innerT">
+                                @*<a href="@Url.Action("EditCustomer", "Account", new { Model.UserDetails.Users.UserID })" class="btn btn-default btn-xs pull-right"><i class="fa fa-edit"></i> Add/Edit</a>*@
+                                <h4 class="margin-none">Customer Accounts</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="innerAll">
+                        @if (Model.UserDetails.Customers.Count > 0)
+                        {
+                            <table class=" dynamicTable table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Account Code</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @for (var index = 0; index < Model.UserDetails.Customers.Count; index++)
+                                    {
+                                        var item = Model.UserDetails.Customers[index];
+                                        string actionName;
+                                        string textColor;
+
+                                        if (Model.UserDetails.UserMap[index].DeletedOn == null)
+                                        {
+                                            actionName = "Active";
+                                            textColor = "success";
+                                        }
+                                        else
+                                        {
+                                            actionName = "Deleted";
+                                            textColor = "danger";
+                                        }
+                                        <tr>
+                                            <td>@item.AccountCode</td>
+                                            <td>@item.Name</td>
+                                            <td class="text-center">
+                                                <div class="text-@textColor">@actionName</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div>
+                                The user is not assigned to any customers
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- //End Col -->
+        <div class="col-md-4">
+            <!-- Widget -->
+            <div class="widget">
+                <div class="widget-body padding-none">
+                    <div class="widget-head height-auto">
+                        <div class="media">
+                            <div class="pull-left innerAll half">
+                                <i class="fa fa-user fa-3x"></i>
+                            </div>
+                            <div class="media-body innerT">
+                                <a href="@Url.Action("EditSupplier", "Account", new { Model.UserDetails.Users.UserID })" class="btn btn-default btn-xs pull-right"><i class="fa fa-edit"></i> Add/Edit</a>
+                                <h4 class="margin-none">Supplier Accounts</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="innerAll">
+                        @if (Model.UserDetails.Suppliers.Count > 0)
+                        {
+                            <table class="dynamicTable table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Vendor ID</th>
+                                        <th>Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var index = 0; index < Model.UserDetails.Suppliers.Count; index++)
+                                    {
+                                        var item = Model.UserDetails.Suppliers[index];
+                                        string actionName;
+                                        string textcolor;
+
+                                        if (Model.UserDetails.UserMap[index].DeletedOn == null)
+                                        {
+                                            actionName = "Active";
+                                            textcolor = "success";
+                                        }
+                                        else
+                                        {
+                                            actionName = "Deleted";
+                                            textcolor = "danger";
+                                        }
+                                        <tr>
+                                            <td>@item.VendorID</td>
+                                            <td>@item.SupplierName</td>
+                                            <td class="text-center">
+                                                <div class="text-@textcolor">@actionName</div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div>
+                                The user is not assigned to any suppliers
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //End Col -->
+        @*<div class="col-md-4">
+                <div class="widget border-top-none ">
+                    <div class="bg-gray">
+                        <h4 class="innerAll  border-top  border-bottom margin-bottom-none">
+                            Employee
+                            <p class="margin-none strong pull-right">72%</p>
+                        </h4>
+                    </div>
+                    <div class="progress progress-mini margin-none bg-gray border-bottom">
+                        <div class="progress-bar progress-bar-success" style="width: 72%;"></div>
+                    </div>
+                    <div class="innerAll ">
+                        <div class="media half">
+                            <a href="" class="pull-left">
+                                <img src="../assets/images/people/50/3.jpg" alt="" class="img-circle">
+                            </a>
+                            <div class="media-body innerB half">
+                                <a href="#" class="btn btn-default btn-xs pull-right">Complete <i class="fa fa-angle-double-right"></i></a>
+                                <a href="" class="margin-none strong text-regular display-block">Lisa Alda </a>
+                                <small class="text-muted-dark">Project Manager</small>
+                                <div class="clearfix"></div>
+                                <div class="innerT half">
+                                    <a href="" class="btn btn-default btn-xs"><i class=" fa fa-star text-muted"></i></a>
+                                    <a href="" class="btn btn-default btn-xs"><i class=" fa fa-user text-muted"></i></a>
+                                    <a href="" class="btn btn-default btn-xs"><i class=" fa fa-envelope text-muted"></i></a>
+                                    <a href="" class="btn btn-default btn-xs"><i class=" fa fa-twitter text-muted"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>*@
+    </div>
+</div>

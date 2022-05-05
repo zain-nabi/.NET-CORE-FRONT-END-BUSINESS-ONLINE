@@ -1,0 +1,246 @@
+﻿@using Microsoft.Extensions.Configuration
+@using Triton.Core
+@inject IConfiguration Configuration
+
+@model List<Triton.Model.TritonGroup.Custom.ExternalUserModel>
+@{
+    ViewData["Title"] = "Assign Customers";
+
+    ViewData["Header"] = "User";
+    ViewData["HeaderBold"] = "Administration";
+    ViewData["Description"] = "Maintain all the users";
+
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+    string[] accountCodes;
+    string[] tmp;
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+                <li class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Business Online</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">Search</h1>
+                </li>
+                <li class="nav-item ml-auto">
+                    <a class="btn btn-sm btn-primary mr-2" href="/Identity/Account/Register">
+                        <i class="fal fa-user"></i> New User
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <!-- End Page Header -->
+    </div>
+
+    <div class="content container-fluid">
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header">
+                <div class="row justify-content-between align-items-center flex-grow-1">
+                    <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                        <form>
+                            <!-- Search -->
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="tio-search"></i>
+                                    </div>
+                                </div>
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                            </div>
+                            <!-- End Search -->
+                        </form>
+                    </div>
+                </div>
+                <!-- End Row -->
+            </div>
+            <!-- End Header -->
+            <!-- Table -->
+            <div class="table-responsive datatable-custom">
+                <div id="datatable_wrapper" class="dataTables_wrapper">
+                    <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                           data-hs-datatables-options='{
+                     "order": [],
+                     "columnDefs": [ {
+                            "targets": 6,
+                            "orderable": false
+                     } ],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 8,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Username</th>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Customers</th>
+                                <th>User Role</th>
+                                <th>Active</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-size-1">
+                            @foreach (var item in Model)
+                            {
+                                <tr class="">
+                                    <td>
+                                        <a class="d-flex align-items-center">
+                                            <div class="avatar avatar-soft-primary avatar-circle">
+                                                <span class="avatar-initials">@item.UserName.Substring(0, 1)</span>
+                                            </div>
+                                            <div class="ml-3">
+                                                <span class="d-block h5 text-hover-primary mb-0">@item.UserName</span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @item.FirstName
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @item.LastName
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @if (!String.IsNullOrEmpty(item.CustomerNames))
+                                            {
+                                                @if (!item.CustomerNames.Contains(","))
+                                                {
+                                                    accountCodes = item.CustomerNames.Split(",");
+                                                    @for (int i = 0; i < accountCodes.Length; i++)
+                                                    {
+                                                        tmp = accountCodes[0].Split("-");
+                                                        <span class="badge badge-primary" data-toggle="tooltip" title="@tmp[1]">@item.CustomerNames.Substring(0, item.CustomerNames.IndexOf("-")).Trim()</span>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    accountCodes = item.CustomerNames.Split(",");
+                                                    @for (int i = 0; i < accountCodes.Length; i++)
+                                                    {
+                                                        tmp = accountCodes[i].Split("-");
+                                                        <span class="badge badge-primary mr-1" data-toggle="tooltip" title="@tmp[1]">@accountCodes[i].Substring(0, @accountCodes[i].IndexOf("-")).Trim()</span>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @item.UserRole
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="media align-items-center">
+                                            @{
+                                                var badgeColor = item.LockoutEnabled == false ? "danger" : "success";
+                                            }
+                                            <span class="badge badge-@badgeColor">@item.LockoutEnabled</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="hs-unfold">
+                                            <a class="js-hs-unfold-invoker btn btn-sm btn-white" href="javascript:;" data-hs-unfold-options="{
+                                            &quot;target&quot;: &quot;#@item.ExternalUserID&quot;,
+                                            &quot;type&quot;: &quot;css-animation&quot;
+                                        }" data-hs-unfold-target="#@item.ExternalUserID" data-hs-unfold-invoker="">
+                                                Actions <i class="tio-chevron-down ml-1"></i>
+                                            </a>
+
+                                            <div id="@item.ExternalUserID" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm dropdown-menu-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-hidden" data-hs-target-height="145.078" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;">
+                                                <a class="dropdown-item" href="@Url.Action("Edit", "Admin", new { ExternalUserID = item.ExternalUserID})"><i class="fal fa-edit mr-1"></i>Edit</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Table -->
+            <!-- Footer -->
+            <div class="card-footer">
+                <!-- Pagination -->
+                <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                    <div class="col-sm mb-2 mb-sm-0">
+                        <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                            <span class="mr-2">Showing:</span>
+
+                            <!-- Select -->
+                            <select id="datatableEntries" class="js-select2-custom"
+                                    data-hs-select2-options='{
+                            "minimumResultsForSearch": "Infinity",
+                            "customClass": "custom-select custom-select-sm custom-select-borderless",
+                            "dropdownAutoWidth": true,
+                            "width": true
+                          }'>
+                                <option value="4">4</option>
+                                <option value="6">6</option>
+                                <option value="8" selected>8</option>
+                                <option value="12">12</option>
+                            </select>
+                            <!-- End Select -->
+
+                            <span class="text-secondary mr-2">of</span>
+
+                            <!-- Pagination Quantity -->
+                            <span id="datatableWithPaginationInfoTotalQty"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-auto">
+                        <div class="d-flex justify-content-center justify-content-sm-end">
+                            <!-- Pagination -->
+                            <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Pagination -->
+            </div>
+            <!-- End Footer -->
+
+        </div>
+    </div>
+</main>
+
+
+@section scripts{
+    <script>
+        $('#datatable').on('draw.dt', function () {
+            $('[data-toggle="tooltip"]').tooltip(); // Or your function for tooltips
+        });
+    </script>
+}

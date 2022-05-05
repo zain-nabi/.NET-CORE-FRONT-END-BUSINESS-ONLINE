@@ -1,0 +1,152 @@
+﻿@model Triton.BusinessOnline.Models.EditCustomerModel
+@{
+    ViewBag.Title = "Edit Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.HeaderIcon = Html.Raw("<i class='fa fa-user fa-stack-1x fa-inverse' style='color:#FFFFFF'></i>");
+    ViewBag.HeaderTitle = "User/Supplier";
+    ViewBag.HeaderDescription = "Edit Supplier";
+
+    var type = "Supplier";
+}
+
+<div class="innerLR">
+    <div class="row">
+        @if (Model.SuccessMessage != null)
+        {
+            <span>@Html.Raw(Model.SuccessMessage)</span>
+        }
+        <div class="col-md-8">
+            <!-- Widget -->
+            <div class="widget widget-body-white">
+                <div class="media widget-body innerAll">
+                    <div class="media-body innerL half">
+                        <h4 class="margin-none">
+                            <a href="" class="strong text-primary">Suppliers</a>
+                        </h4>
+                        <p class="text-muted">Edit Account Information</p>
+                        @if (Model.UserMapCustomerModels != null)
+                        {
+                            if (Model.UserMapCustomerModels.Suppliers != null)
+                            {
+                                <table class="display nowrap table table-hover table-striped table-bordered dynamicTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor ID</th>
+                                            <th>Supplier Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @for (var index = 0; index < Model.UserMapCustomerModels.Suppliers.Count; index++)
+                                        {
+                                            var item = Model.UserMapCustomerModels.Suppliers[index];
+                                            string actionName;
+                                            string textcolor;
+
+                                            if (Model.UserMapCustomerModels.UserMap[index].DeletedOn == null)
+                                            {
+                                                actionName = "Delete";
+                                                textcolor = "danger";
+                                            }
+                                            else
+                                            {
+                                                actionName = "Reactivate";
+                                                textcolor = "success";
+                                            }
+                                            <tr>
+                                                <td>@item.VendorID</td>
+                                                <td>@item.SupplierName</td>
+                                                <td class="text-center">
+                                                    <a href="@Url.Action("DeleteLink", "Account", new {Model.UserMapCustomerModels.UserMap[index].UserMapID, actionName, type })" class="btn btn-xs btn-link text-@textcolor pull-right"><i class="fa fa-trash"></i> @actionName</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    The user is not assigned to any suppliers
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                The user is not assigned to any suppliers
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- //End Col -->
+        <div class="col-md-4">
+            <div class="widget widget-body-white">
+                <div class="media widget-body innerAll">
+                    @if (!ViewContext.ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">@Html.ValidationMessage("Error")</div>
+                    }
+
+                    <div class="media-body innerL half">
+                        <h4 class="margin-none">
+                            <a href="" class="strong text-primary">Assign Supplier</a>
+                        </h4>
+                        <p class="text-muted">Assign additional suppliers to a user</p>
+                        @using (Html.BeginForm("AddLink", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "form", name = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                <div class="col-md-12">@Html.TextBox("txtCustomer", null, new { @class = "form-control", placeholder = "Search Suppliers", id = "txtCustomer" })</div>
+                                @Html.HiddenFor(model => model.SelectedID)
+                                @Html.HiddenFor(model => model.UserID)
+                                @Html.HiddenFor(model => model.Type, new { Value = "Supplier" })
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Link</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Row -->
+</div>
+
+
+@section scripts
+{
+
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/typeahead.bundle.min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/handlebars-v4.0.2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/typeahead.helper.js"></script>
+
+    <script>
+
+
+
+        var path = 'http://neo:8088/apitblMasterSuppliers/GetMasterSuppliersBySupplierName?SupplierName=%QUERY';
+        var suggestion = '<div><label>{{SupplierName}}</label><label class="pull-right">{{SupplierName}}</label></div>';
+        var errorMsg = '<div class="empty-message">Unable to find any Suppliers that match the current query</div>';
+        var displayName = '{{SupplierName}}';
+        var field = "#txtCustomer";
+        var hiddenField = '#SelectedID';
+        var selectedItemName = "SupplierName";
+        var selectedItemID = "SupplierID";
+
+
+        InitTypeAhead(path, suggestion, errorMsg, displayName, field, hiddenField, selectedItemName, selectedItemID);
+
+        $('.dynamicTable').dataTable({
+            "order": [],
+            responsive: true
+        });
+
+    </script>
+}

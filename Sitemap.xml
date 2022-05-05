@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap>
+	<mvcSiteMapNode mainTitle="Home" icon="far fa-clipboard-list-check">
+		<mvcSiteMapSubTitle subTitle="Dashboard" controller="Home" action="Index" />
+	</mvcSiteMapNode>
+
+	<mvcSiteMapNode mainTitle="Waybills" icon="far fa-clipboard-list-check">
+		<mvcSiteMapSubTitle subTitle="Quotations">
+			<mvcSiteMapSubTitleChild childTitle="Add Quotation" controller="Quotation" action="Create" />
+			<mvcSiteMapSubTitleChild childTitle="Search" controller="Quotation" action="Index"  />
+			<mvcSiteMapSubTitleChild childTitle="Add Site Code" controller="SiteCode" action="Create"  />
+		</mvcSiteMapSubTitle>
+
+		<mvcSiteMapSubTitle subTitle="Collections">
+			<mvcSiteMapSubTitleChild childTitle="Add Collections" controller="Collection" action="Create" />
+			<mvcSiteMapSubTitleChild childTitle="Search" controller="Collection" action="Index"  />
+		</mvcSiteMapSubTitle>
+
+		<mvcSiteMapSubTitle subTitle="Waybill">
+			<mvcSiteMapSubTitleChild childTitle="Add Waybill" controller="Waybill" action="Create" />
+			<mvcSiteMapSubTitleChild childTitle="Search" controller="Waybill" action="Search"  />
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+
+	<mvcSiteMapNode mainTitle="Reports" icon="far fa-clipboard-list-check">
+		<mvcSiteMapSubTitle subTitle="Financial">
+			<mvcSiteMapSubTitleChild childTitle="Statement" controller="Statement" action="Index" />
+			<mvcSiteMapSubTitleChild childTitle="Search Invoices" controller="Invoice" action="Index"  />
+		</mvcSiteMapSubTitle>
+
+		<mvcSiteMapSubTitle subTitle="Deliveries">
+			<mvcSiteMapSubTitleChild childTitle="Customer Assessment" controller="Report" action="CustomerAssessment" />
+
+		</mvcSiteMapSubTitle>
+	</mvcSiteMapNode>
+
+</mvcSiteMap>
+
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMapNode>
+  <mvcSiteMapNode title="Home" icon="far fa-home-lg-alt">
+    <mvcSiteMapNode title="Dashboard" controller="Home" action="Index" />
+  </mvcSiteMapNode>
+  
+  <mvcSiteMapNode title="Quotations" icon="far fa-file-invoice">
+    <mvcSiteMapNode title="Search Quotes" controller="Quotation" action="index" />
+    <mvcSiteMapNode title="Create Quote" controller="Quotation" action="Create" />
+  </mvcSiteMapNode>
+  
+    <mvcSiteMapNode title="Collections" icon="far fa-dolly-flatbed-alt">
+    <mvcSiteMapNode title="Search Collections" controller="Collection" action="index" />
+    <mvcSiteMapNode title="Request a Collection" controller="Collection" action="Create" />
+  </mvcSiteMapNode>
+
+  <mvcSiteMapNode title="Waybills" icon="far fa-line-columns">
+    <mvcSiteMapNode title="Search Waybills" controller="Waybill" action="Search" />
+    <mvcSiteMapNode title="Create E-Waybill" controller="Waybill" action="Create" />
+  </mvcSiteMapNode>
+
+  <mvcSiteMapNode title="Financial" icon="far fa-file-invoice-dollar">
+    <mvcSiteMapNode title="Statement" controller="Statement" action="Index" />
+    <mvcSiteMapNode title="Search Invoices" controller="Invoice" action="index" />
+  </mvcSiteMapNode>
+
+  <mvcSiteMapNode title="Reports" icon="far fa-file-chart-line">
+    <mvcSiteMapNode title="Customer Assessment" controller="Report" action="CustomerAssessment" />
+  </mvcSiteMapNode>
+
+  <mvcSiteMapNode title="Administration" roles="Administrator" icon="far fa-cogs">
+    <mvcSiteMapNode title="Create Users" controller="Admin" action="CreateUser" roles="Administrator, Customer"/>
+    <mvcSiteMapNode title="Manage Users" controller="Admin" action="ListUsers" roles="Administrator"/>
+  </mvcSiteMapNode>
+
+</mvcSiteMapNode>-->

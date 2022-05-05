@@ -1,0 +1,108 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Triton.Model.TritonGroup.Tables.Users
+@{
+    var title = !Model.LockoutEnabled ? "Delete" : "Reactivate";
+
+    ViewData["Title"] = title;
+    ViewData["Header"] = title;
+    ViewData["Controller"] = "Admin";
+    ViewData["Route"] = "User";
+    ViewData["Page"] = title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+<main id="content" role="main">
+    <!-- Cart Section -->
+    <div class="container">
+        <div class="w-md-80 w-lg-50  mx-md-auto">
+            <figure class="ie-height-40 max-width-15 mx-auto mb-3">
+                <img class="js-svg-injector" src="@template/assets/svg/icons/icon-46.svg" alt="SVG" data-parent="#icon46">
+            </figure>
+            <div class="mb-5">
+                <h1 class="h3 font-weight-medium text-center">User to be deleted</h1>
+                <p>
+                    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "form", name = "form", data_parsley_validate = "" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <!-- List Group -->
+                                <ul class="list-group list-group-transparent list-group-flush list-group-borderless mb-0">
+                                    <li class="list-group-item pt-0 pb-4">
+                                        <div class="media">
+                                            @*<span class="fas fa-envelope list-group-icon mr-3"></span>*@
+                                            <div class="media-body text-lh-sm">
+                                                <span class="d-block mb-1">Username:</span>
+                                                <span class="text-muted">@Html.DisplayFor(x => x.UserName)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item pt-0 pb-4">
+                                        <div class="media">
+                                            @*<span class="fas fa-link list-group-icon mr-3"></span>*@
+                                            <div class="media-body text-lh-sm">
+                                                <span class="d-block mb-1">First name:</span>
+                                                <span class="text-muted">@Html.DisplayFor(x => x.FirstName)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                                <!-- End List Group -->
+                            </div>
+
+                            <div class="col-md-6 col-lg-6">
+                                <!-- List Group -->
+                                <ul class="list-group list-group-transparent list-group-flush list-group-borderless mb-0">
+                                    <li class="list-group-item pt-0 pb-4">
+                                        <div class="media">
+                                            @*<span class="fas fa-map-marker-alt list-group-icon mr-3"></span>*@
+                                            <div class="media-body text-lh-sm">
+                                                <span class="d-block mb-1">Last name:</span>
+                                                <span class="text-muted">@Html.DisplayFor(x => x.LastName)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="list-group-item pt-0 pb-4">
+                                        <div class="media">
+                                            @*<span class="fas fa-map-marker-alt list-group-icon mr-3"></span>*@
+                                            <div class="media-body text-lh-sm">
+                                                <span class="d-block mb-1">Mobile:</span>
+                                                <span class="text-muted"> @Html.DisplayFor(x => x.PhoneNumber)</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- End List Group -->
+                            </div>
+
+                        </div>
+                        <hr />
+                        <div class="form-actions float-right">
+                            @if (Model.LockoutEnabled)
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm-wide btn-pill transition-3d-hover">Yes</button>
+                                @Html.HiddenFor(x => x.LockoutEnabled, new { Value = false })
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm-wide btn-pill transition-3d-hover">Remove</button>
+                                @Html.HiddenFor(x => x.LockoutEnabled, new { Value = true })
+                            }
+                            <a asp-controller="Admin" asp-action="ListUsers" class="btn btn-danger btn-pill transition-3d-hover px-5">Back</a>
+                        </div>
+
+                        @Html.HiddenFor(x => x.UserID)
+                        @Html.HiddenFor(x => x.UserName)
+                        @Html.HiddenFor(x=>x.LastName)
+                        @Html.HiddenFor(x=>x.FirstName)
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- End Cart Section -->
+</main>

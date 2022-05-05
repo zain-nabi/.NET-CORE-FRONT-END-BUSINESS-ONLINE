@@ -1,0 +1,164 @@
+﻿
+@using Microsoft.Extensions.Configuration
+@using Triton.Core
+@inject IConfiguration Configuration
+
+@model Triton.BusinessOnline.Models.EditCustomerModel
+
+
+
+@{
+    ViewData["Title"] = "Add Customer";
+
+
+    ViewData["Controller"] = "Customers";
+    ViewData["Route"] = "Assign";
+    ViewData["Page"] = "Add Customers";
+    var type = "Customer";
+    var template = $"{Configuration.GetSection("URL").GetSection("template").Value}";
+}
+
+
+
+
+
+<div class="innerLR">
+    <div class="row">
+        @if (Model.SuccessMessage != null)
+        {
+            <span>@Html.Raw(Model.SuccessMessage)</span>
+        }
+        <div class="col-md-8">
+            <!-- Widget -->
+            <div class="widget widget-body-white">
+                <div class="media widget-body innerAll">
+                    <div class="media-body innerL half">
+                        <h4 class="margin-none">
+                            <a href="" class="strong text-primary">Customers</a>
+                        </h4>
+                        <p class="text-muted">Edit Account Information</p>
+                        @if (Model.UserMapCustomerModels != null)
+                        {
+                            if (Model.UserMapCustomerModels.Customers != null)
+                            {
+                                <table class="table-responsive-md u-datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Account Code</th>
+                                            <th>Customer Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @for (var index = 0; index < Model.UserMapCustomerModels.Customers.Count; index++)
+                                        {
+                                            var item = Model.UserMapCustomerModels.Customers[index];
+                                            string actionName;
+                                            string textcolor;
+
+                                            if (Model.UserMapCustomerModels.UserMap[index].DeletedOn == null)
+                                            {
+                                                actionName = "Delete";
+                                                textcolor = "danger";
+                                            }
+                                            else
+                                            {
+                                                actionName = "Reactivate";
+                                                textcolor = "success";
+                                            }
+                                            <tr>
+                                                <td>@item.AccountCode</td>
+                                                <td>@item.Name</td>
+                                                <td class="text-center">
+                                                    <a href="@Url.Action("Delete", "Admin", new {Model.UserMapCustomerModels.UserMap[index].UserMapID, actionName, type})" class="btn btn-xs btn-link text-@textcolor">@actionName</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    The user is not assigned to any customers
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                The user is not assigned to any suppliers
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- //End Col -->
+        <div class="col-md-4">
+            <div class="widget widget-body-white">
+                <div class="media widget-body innerAll">
+                    @if (!ViewContext.ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger" role="alert">@Html.ValidationMessage("Error")</div>
+                    }
+
+                    <div class="media-body innerL half">
+                        <h4 class="margin-none">
+                            <a href="" class="strong text-primary">Assign Customer</a>
+                        </h4>
+                        <p class="text-muted">Assign additional customers to a user</p>
+                        @using (Html.BeginForm("AddLink", null, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "form", name = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group">
+                                <div class="col-md-12">@Html.TextBox("txtCustomer", null, new { @class = "form-control", placeholder = "Search Customers", id = "txtCustomer" })</div>
+                                @Html.HiddenFor(model => model.SelectedID)
+                                @Html.HiddenFor(model => model.UserID)
+                                @Html.HiddenFor(model => model.Type, new { Value = "Customer" })
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Link</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Row -->
+</div>
+
+@section scripts
+{
+    
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/typeahead.bundle.min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/handlebars-v4.0.2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://neo:8073/Scripts/typeahead.helper.js"></script>
+
+    <script>
+
+        //var path = 'http://neo:8088/api/Customers/GetCRMCustomerByID?id=%QUERY';
+        var path ='http://neo:8088/api/Customers/GetAllCustomersSearch?DBName=CRM&search=%QUERY';
+        var suggestion = '<div><label class="text-danger">{{AccountCode}}</label><label >{{CustomerID}}</label></div> <label >{{Name}}</label></div>';
+        var errorMsg = '<div class="empty-message">Unable to find any Customers that match the current query</div>';
+        var displayName = '{{Name}}';
+        var field = "#txtCustomer";
+        var hiddenField = '#SelectedID';
+        var selectedItemName = "Name";
+        var selectedItemCustomerID = "CustomerID";
+        InitTypeAhead(path, suggestion, errorMsg, displayName, field, hiddenField, selectedItemName, selectedItemCustomerID);
+        var bar = $('.progress-bar');
+        $(bar).each(function () {
+            bar_width = $(this).attr('aria-valuenow');
+            $(this).width(bar_width + '%');
+        });
+
+        var parsleyOptions = {
+            errorsWrapper: '<b class="text-danger pull-right"><div></div></b>',
+            errorTemplate: '<span></span>'
+        };
+
+    </script>
+}

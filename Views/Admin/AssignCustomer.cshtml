@@ -1,0 +1,120 @@
+﻿@model List<Triton.Model.TritonGroup.Custom.UserMapCustomerModels>
+@{
+    ViewData["Title"] = "Assign Customers";
+
+    ViewData["Header"] = "User/Customers";
+    ViewData["Controller"] = "Customers";
+    ViewData["Route"] = "Assign";
+    ViewData["Page"] = "Customers";
+}
+
+<!-- Indicator -->
+<div class="card">
+    <div class="card-body pt-4 pb-5 px-5 mb-3 mb-md-0">
+        <!-- Title & Settings -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="h6 mb-0">Activity</h4>
+
+            <!-- Settings Dropdown -->
+            <div class="position-relative">
+                <a id="activitySettingsDropdownInvoker" class="btn btn-sm btn-icon btn-soft-secondary btn-bg-transparent" href="javascript:;" role="button"
+                   aria-controls="activitySettingsDropdown"
+                   aria-haspopup="true"
+                   aria-expanded="false"
+                   data-unfold-event="click"
+                   data-unfold-target="#activitySettingsDropdown"
+                   data-unfold-type="css-animation"
+                   data-unfold-duration="300"
+                   data-unfold-delay="300"
+                   data-unfold-hide-on-scroll="true"
+                   data-unfold-animation-in="slideInUp"
+                   data-unfold-animation-out="fadeOut">
+                    <span class="fas fa-ellipsis-h btn-icon__inner"></span>
+                </a>
+
+                <div id="activitySettingsDropdown" class="dropdown-menu dropdown-unfold dropdown-menu-right" aria-labelledby="activitySettingsDropdownInvoker" style="min-width: 190px;">
+                    <a class="dropdown-item" href="#">
+                        <small class="fas fa-eye dropdown-item-icon"></small>
+                        Mark as read
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <small class="fas fa-eye-slash dropdown-item-icon"></small>
+                        Mark as unread
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <small class="fas fa-archive dropdown-item-icon"></small>
+                        Archive
+                    </a>
+                </div>
+            </div>
+            <!-- End Settings Dropdown -->
+        </div>
+        <!-- End Title & Settings -->
+
+        <hr class="mt-3 mb-4">
+
+        <div class="overflow-hidden">
+            <div class="js-scrollbar pr-3" style="max-height: 300px;">
+                <!-- Activity Feed -->
+                <ul class="list-unstyled u-indicator-vertical-dashed">
+                    <li class="media u-indicator-vertical-dashed-item">
+                        <span class="btn btn-xs btn-icon btn-primary rounded-circle mr-3">
+                            <span class="btn-icon__inner">A</span>
+                        </span>
+                        <div class="media-body">
+                            <h5 class="font-size-1 mb-1">Amanta Owens</h5>
+                            <p class="small mb-1">Added new task: <span class="font-weight-medium">Slack home page redesign</span></p>
+                            <small class="d-block text-muted">30 min ago</small>
+                        </div>
+                    </li>
+
+                    <li class="media u-indicator-vertical-dashed-item">
+                        <span class="btn btn-xs btn-icon btn-success rounded-circle mr-3">
+                            <span class="btn-icon__inner">S</span>
+                        </span>
+                        <div class="media-body">
+                            <h5 class="font-size-1 mb-1">Sebastian Diaz</h5>
+                            <p class="small mb-1">Added new task: <span class="font-weight-medium">Mapbox logo redesign</span></p>
+                            <small class="d-block text-muted">44 min ago</small>
+                        </div>
+                    </li>
+
+                    <li class="media u-indicator-vertical-dashed-item">
+                        <span class="btn btn-xs btn-icon btn-warning rounded-circle mr-3">
+                            <span class="btn-icon__inner text-white">F</span>
+                        </span>
+                        <div class="media-body">
+                            <h5 class="font-size-1 mb-1">Eliza Donovan</h5>
+                            <p class="small mb-1">Added new task: <span class="font-weight-medium">Spotify branding</span></p>
+                            <small class="d-block text-muted">1 hour ago</small>
+                        </div>
+                    </li>
+
+                    <li class="media u-indicator-vertical-dashed-item">
+                        <span class="btn btn-xs btn-icon btn-primary rounded-circle mr-3">
+                            <span class="btn-icon__inner">C</span>
+                        </span>
+                        <div class="media-body">
+                            <h5 class="font-size-1 mb-1">Cler Lockhart</h5>
+                            <p class="small mb-1">Added new task: <span class="font-weight-medium">Dropbox home page redesign</span></p>
+                            <small class="d-block text-muted">15 hours ago</small>
+                        </div>
+                    </li>
+
+                    <li class="media u-indicator-vertical-dashed-item">
+                        <span class="btn btn-xs btn-icon btn-danger rounded-circle mr-3">
+                            <span class="btn-icon__inner">J</span>
+                        </span>
+                        <div class="media-body">
+                            <h5 class="font-size-1 mb-1">James Collins</h5>
+                            <p class="small mb-1">Added new task: <span class="font-weight-medium">InVison branding</span></p>
+                            <small class="d-block text-muted">1 day ago</small>
+                        </div>
+                    </li>
+                </ul>
+                <!-- End Activity Feed -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Indicator -->

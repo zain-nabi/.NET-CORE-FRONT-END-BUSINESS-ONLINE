@@ -1,0 +1,564 @@
+﻿@model CustomerAssessmentModel
+@{
+    ViewData["Title"] = "Customer Assessment";
+    ViewData["Header"] = "Customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-end">
+                <div class="col-sm mb-2 mb-sm-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-no-gutter">
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Reports</a></li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" href="javascript:;">Customer Assessment</a></li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="page-header-title">@Model.CustomerName</h1>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+    </div>
+</main>
+<div class="content container-fluid">
+    <form method="post" id="FilterForm">
+        <div class="col-lg mb-1 mb-lg-0">
+            <!-- Search Property Input -->
+            <div class="js-focus-state">
+                <ul class="nav align-items-center">
+
+                    <li class="nav-item ml-auto">
+
+                        <div class="hs-unfold mr-2">
+                            <a style="top:-50px;" class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle" href="javascript:;" data-hs-unfold-options="{
+                         &quot;target&quot;: &quot;#usersExportDropdown&quot;,
+                         &quot;type&quot;: &quot;css-animation&quot;
+                       }" data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
+                                <i class="tio-filter-list mr-1"></i> Filter
+                            </a>
+
+                            <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated slideInUp" data-hs-target-height="276.133" data-hs-unfold-content="" data-hs-unfold-content-animation-in="slideInUp" data-hs-unfold-content-animation-out="fadeOut" style="animation-duration: 300ms;top:-20px;">
+                                <span class="dropdown-header">Customers</span>
+                                @foreach (var item in Model.CustomerList)
+                                {
+                                    <a class="dropdown-item" value="@item.CustomerID" href="@Url.Action("CustomerAssessment","Report",new { CustomerID = item.CustomerID, Name = item.Name})" name="@item.CustomerID"><i class="far fa-address-card dropdown-item-icon"></i>@item.Name</a>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- End Search Property Input -->
+        </div>
+    </form>
+</div>
+<br />
+<div class="content container-fluid">
+    <div class="row">
+        <div class="col-lg-4 mb-3 mb-lg-5">
+            <!-- Card -->
+            <div class="card h-100">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">Weekly</h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body text-center">
+                    @if (Html.Raw(Model.WeeklyCustomerAssessment.PercDelMainCenter).ToString().Replace(",", ".") == "0")
+                    {
+                        <div class="h3">
+                            <span class="badge badge-soft-info badge-pill">
+                                <i class="tio-checkmark-circle"></i> Awaiting Data
+                            </span>
+                        </div>
+                    }
+                    <!-- Chart Half -->
+                    <div class="chartjs-doughnut-custom" style="height: 12rem;">
+                        <canvas class="js-chartjs-doughnut-half"
+                                data-hs-chartjs-options='{
+                                    "type": "doughnut",
+                                    "data": {
+                                    "labels": ["Main Center Delivery Percentage", "Outlying Delivery Percentage"],
+                                    "datasets": [{
+                                    "data": [@Html.Raw(Model.WeeklyCustomerAssessment.PercDelMainCenter).ToString().Replace(",",".") ,@Html.Raw(Model.WeeklyCustomerAssessment.PercDelOutCenter).ToString().Replace(",",".")],
+                                    "backgroundColor": ["#377dff", "rgba(55, 125, 255, 0.35)"],
+                                    "borderWidth": 4,
+                                    "hoverBorderColor": "#ffffff"}]}}'></canvas>
+                        <div class="chartjs-doughnut-custom-stat">
+                            <small class="text-cap">No. of waybills</small>
+                            <span class="h1">@Model.WeeklyCustomerAssessment.NoofWaybills</span>
+                        </div>
+
+                    </div>
+                    <!-- End Chart Half -->
+                    <hr>
+                    <div class="row">
+                        <div class="col text-right">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem"><span class="legend-indicator" style="background-color:#377dff"></span>@Model.WeeklyCustomerAssessment.PercDelMainCenter%</span>
+                            <span class="d-block">Main Center</span>
+                        </div>
+
+                        <div class="col column-divider text-left">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem">
+                                <span class="legend-indicator" style="background-color:rgba(55, 125, 255, 0.35)"></span>@Model.WeeklyCustomerAssessment.PercDelOutCenter%
+                            </span>
+                            <span class="d-block">Outlying</span>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                    <!-- End Row -->
+                </div>
+                <!-- End Body -->
+            </div>
+            <!-- End Card -->
+        </div>
+        <div class="col-lg-4 mb-3 mb-lg-5">
+            <!-- Card -->
+            <div class="card h-100">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">Monthly</h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body text-center">
+                    @if (Html.Raw(Model.MonthlyCustomerAssessment.PercDelMainCenter).ToString().Replace(",", ".") == "0")
+                    {
+                        <div class="h3">
+                            <span class="badge badge-soft-info badge-pill">
+                                <i class="tio-checkmark-circle"></i> Awaiting Data
+                            </span>
+                        </div>
+                    }
+                    <!-- Chart Half -->
+                    <div class="chartjs-doughnut-custom" style="height: 12rem;">
+                        <canvas class="js-chartjs-doughnut-half" id="canvas2"
+                                data-hs-chartjs-options='{
+                                    "type": "doughnut",
+                                    "data": {
+                                    "labels": ["Main Center Delivery Percentage", "Outlying Delivery Percentage"],
+                                    "datasets": [{
+                                    "data": [@Html.Raw(Model.MonthlyCustomerAssessment.PercDelMainCenter).ToString().Replace(",",".") ,@Html.Raw(Model.MonthlyCustomerAssessment.PercDelOutCenter).ToString().Replace(",",".")],
+                                    "backgroundColor": ["#377dff", "rgba(55, 125, 255, 0.35)"],
+                                    "borderWidth": 4,
+                                    "hoverBorderColor": "#ffffff"}]}}'></canvas>
+                        <div class="chartjs-doughnut-custom-stat">
+                            <small class="text-cap">No. of waybills</small>
+                            <span class="h1">@Model.MonthlyCustomerAssessment.NoofWaybills</span>
+                        </div>
+
+                    </div>
+                    <!-- End Chart Half -->
+                    <hr>
+                    <div class="row">
+                        <div class="col text-right">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem"><span class="legend-indicator" style="background-color:#377dff"></span>@Model.MonthlyCustomerAssessment.PercDelMainCenter%</span>
+                            <span class="d-block">Main Center</span>
+                        </div>
+
+                        <div class="col column-divider text-left">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem">
+                                <span class="legend-indicator" style="background-color:rgba(55, 125, 255, 0.35)"></span>@Model.MonthlyCustomerAssessment.PercDelOutCenter%
+                            </span>
+                            <span class="d-block">Outlying</span>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                    <!-- End Row -->
+                </div>
+                <!-- End Body -->
+            </div>
+            <!-- End Card -->
+        </div>
+        <div class="col-lg-4 mb-3 mb-lg-5">
+            <!-- Card -->
+            <div class="card h-100">
+                <!-- Header -->
+                <div class="card-header">
+                    <h4 class="card-header-title">Yearly</h4>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="card-body text-center">
+                    @if (Html.Raw(Model.CustomerAssessment.PercDelMainCenter).ToString().Replace(",", ".") == "0")
+                    {
+                        <div class="h3">
+                            <span class="badge badge-soft-info badge-pill">
+                                <i class="tio-checkmark-circle"></i> Awaiting Data
+                            </span>
+                        </div>
+                    }
+                    <!-- Chart Half -->
+                    <div class="chartjs-doughnut-custom" style="height: 12rem;">
+                        <canvas class="js-chartjs-doughnut-half" id="canvas3"
+                                data-hs-chartjs-options='{
+                                    "type": "doughnut",
+                                    "data": {
+                                    "labels": ["Main Center Delivery Percentage", "Outlying Delivery Percentage"],
+                                    "datasets": [{
+                                    "data": [@Html.Raw(Model.CustomerAssessment.PercDelMainCenter).ToString().Replace(",",".") ,@Html.Raw(Model.CustomerAssessment.PercDelOutCenter).ToString().Replace(",",".")],
+                                    "backgroundColor": ["#377dff", "rgba(55, 125, 255, 0.35)"],
+                                    "borderWidth": 4,
+                                    "hoverBorderColor": "#ffffff"}]}}'></canvas>
+                        <div class="chartjs-doughnut-custom-stat">
+                            <small class="text-cap">No. of waybills</small>
+                            <span class="h1">@Model.CustomerAssessment.NoofWaybills</span>
+                        </div>
+
+                    </div>
+                    <!-- End Chart Half -->
+                    <hr>
+                    <div class="row">
+                        <div class="col text-right">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem"><span class="legend-indicator" style="background-color:#377dff"></span>@Model.CustomerAssessment.PercDelMainCenter%</span>
+                            <span class="d-block">Main Center</span>
+                        </div>
+
+                        <div class="col column-divider text-left">
+                            <span class="d-block h4 mb-0" style="font-size:.75rem">
+                                <span class="legend-indicator" style="background-color:rgba(55, 125, 255, 0.35)"></span>@Model.CustomerAssessment.PercDelOutCenter%
+                            </span>
+                            <span class="d-block">Outlying</span>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                    <!-- End Row -->
+                </div>
+                <!-- End Body -->
+            </div>
+            <!-- End Card -->
+        </div>
+    </div>
+</div>
+
+
+<div class="content container-fluid">
+
+    <div class="card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="row justify-content-between align-items-center flex-grow-1">
+                <div class="col-sm-6 col-md-4 mb-3 mb-sm-0">
+                    <form>
+                        <!-- Search -->
+                        <div class="input-group input-group-merge input-group-flush">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="tio-search"></i>
+                                </div>
+                            </div>
+                            <input id="datatableSearch" type="search" class="form-control" placeholder="Filter results" aria-label="Filter results">
+                        </div>
+                        <!-- End Search -->
+                    </form>
+                </div>
+            </div>
+            <!-- End Row -->
+        </div>
+        <!-- End Header -->
+        <!-- Table -->
+        <div class="table-responsive datatable-custom overflow-hidden">
+            <div id="datatable_wrapper" class="dataTables_wrapper">
+                <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                       data-hs-datatables-options='{
+                     "order": [0, "asc"],
+                     "info": {
+                       "totalQty": "#datatableWithPaginationInfoTotalQty"
+                     },
+                     "search": "#datatableSearch",
+                     "entries": "#datatableEntries",
+                     "pageLength": 20,
+                     "isResponsive": false,
+                     "isShowPaging": false,
+                     "pagination": "datatablePagination"
+                   }'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Description</th>
+                            <th>Weekly</th>
+                            <th>Monthly</th>
+                            <th>Yearly</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-handshake"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Compliance</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.Compliance</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.Compliance</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.Compliance</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-file-spreadsheet"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">No. of Waybills</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.NoofWaybills</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.NoofWaybills</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.NoofWaybills</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-file-chart-line"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">No. of Parcels</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.NoOfParcels</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.NoOfParcels</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.NoOfParcels</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-weight-hanging"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Actual Weight</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.ActualTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.ActualTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.ActualTotal</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-weight"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Volumetric Weight</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.VolumetricTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.VolumetricTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.VolumetricTotal</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-balance-scale"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Chargeable Weight</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.ChargableTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.ChargableTotal</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.ChargableTotal</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-tachometer-alt-average"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Actual Average</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.AvgDelMainCenterActual</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.AvgDelMainCenterActual</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.AvgDelMainCenterActual</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-truck-loading"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Volumetric Average</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.AvgDelMainCenterVolumetric</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.AvgDelMainCenterVolumetric</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.AvgDelMainCenterVolumetric</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-tachometer-average"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Chargeable Average</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.AvgDelMainCenterChargeable</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.AvgDelMainCenterChargeable</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.AvgDelMainCenterChargeable</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-truck"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Deliveries Average</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.AvgNoDeliveries</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.AvgNoDeliveries</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.AvgNoDeliveries</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fal fa-pallet"></i>
+                                    <div class="ml-3">
+                                        <span class="d-block h5 text-hover-primary mb-0">Parcel Average</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.WeeklyCustomerAssessment.AvgNoParcels</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.MonthlyCustomerAssessment.AvgNoParcels</span>
+                            </td>
+                            <td>
+                                <span class="d-block font-size-sm text-body">@Model.CustomerAssessment.AvgNoParcels</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- End Table -->
+        <!-- Footer -->
+        <div class="card-footer">
+            <!-- Pagination -->
+            <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                <div class="col-sm-auto">
+                    <div class="d-flex justify-content-center justify-content-sm-end">
+                        <!-- Pagination -->
+                        <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                    </div>
+                </div>
+            </div>
+            <!-- End Pagination -->
+        </div>
+        <!-- End Footer -->
+
+    </div>
+</div>
+<script src="~/front-dashboard-v1.1/dist/assets/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="~/front-dashboard-v1.1/dist/assets/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+@*<script src="~/front-dashboard-v1.1/dist/assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>*@
+@section Scripts{
+
+    <script>
+        $(document).on('ready', function () {
+            // INITIALIZATION OF CHARTJS
+            // =======================================================
+            $.HSCore.components.HSChartJS.init($('.js-chartjs-doughnut-half'), {
+                options: {
+                    tooltips: {
+                        postfix: "%"
+                    },
+                    cutoutPercentage: 85,
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI
+                }
+            });
+
+            $.HSCore.components.HSChartJS.init($('#canvas2'), {
+                options: {
+                    tooltips: {
+                        postfix: "%"
+                    },
+                    cutoutPercentage: 85,
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI
+                }
+            });
+
+            $.HSCore.components.HSChartJS.init($('#canvas3'), {
+                options: {
+                    tooltips: {
+                        postfix: "%"
+                    },
+                    cutoutPercentage: 85,
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI
+                }
+            });
+        });
+    </script>
+}

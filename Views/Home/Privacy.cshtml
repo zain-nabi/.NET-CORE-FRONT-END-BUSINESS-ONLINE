@@ -1,0 +1,86 @@
+﻿@model List<Triton.BusinessOnline.Controllers.HomeController.TestClass>
+
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+<form asp-controller="Home" asp-action="Privacy" method="post">
+    @*<ul>
+            @for (int i = 0; i < Model.SundryDropDownList.Count; i++)
+            {
+                <li>
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mr-2">
+                            <div class="avatar avatar-sm avatar-soft-primary avatar-circle">
+                                <span class="avatar-initials">@Model.SundryDropDownList[i].Description.Substring(0, 1)</span>
+                                <span class="avatar-status avatar-sm-status avatar-status-warning"></span>
+                            </div>
+                            <div class="ml-3">
+                                <div class="text-hover-primary mb-0">@Model.SundryDropDownList[i].Description</div>
+                                <span class="font-size-sm text-body">Additional charge</span>
+                            </div>
+                        </div>
+                        <div class="ml-auto">-->
+        <!-- Checkbox -->
+        <!--<div class="custom-control custom-checkbox">
+            <input type="checkbox" checked="@Model.SundryDropDownList[i].Selected" id="customCheck_@Model.SundryDropDownList[i].Value" class="custom-control-input">
+
+            <label class="custom-control-label" for="customCheck_@Model.SundryDropDownList[i].Value">&nbsp;</label>
+        </div>-->
+        <!-- End Checkbox -->
+        <!--</div>
+        </div>
+        </li>
+        @Html.HiddenFor(x => x.SundryDropDownList[i].Value)
+        @Html.HiddenFor(x => x.SundryDropDownList[i].Description)
+        @Html.HiddenFor(x => x.SundryDropDownList[i].Selected)
+        }
+        </ul>*@
+
+    <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle">
+        <thead class="thead-light">
+            <tr>
+                <th>Description</th>
+                <th>Value</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <div class="media align-items-center">
+                            <span class="btn btn-xs btn-icon btn-soft-primary rounded-circle mr-3">
+                                <span class="btn-icon__inner">@Model[i].Description.Substring(0, 1)</span>
+                            </span>
+
+                            <div class="media-body">
+                                <a class="d-inline-block text-dark" href="#">
+                                    <h6 class="text-hover-primary mb-0">@Model[i].Description</h6>
+                                </a>
+                                <small class="d-block">@Model[i].Value</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        @*@Html.EditorFor(m => Model[i].CountryCurrencySpots.Rate, new { @class = "form-control", required = "true", data_msg = "Please enter a rate value." })*@
+                            @*<input type="text" class="form-control" required
+                                   data-msg="Please enter a valid number." placeholder="Rate" aria-label="Rate" id="@Model[i].Value" value="@Model[i].Value" asp-for="@Model[i].Value">*@
+                        @*<input type="checkbox" checked="@Model[i].Selected" id="customCheck_@Model[i].Value">*@
+                        @Html.CheckBoxFor(m => Model[i].Selected)
+
+                    </td>
+                   
+                </tr>
+                @Html.HiddenFor(x => Model[i].Description)
+                @Html.HiddenFor(x => Model[i].Value)
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Save" />
+</form>
